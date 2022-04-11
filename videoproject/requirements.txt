@@ -1,5 +1,4 @@
 django_ratelimit
-PyMySQL
 django_chunked_upload
 Django==3.2.5
 sorl-thumbnail
