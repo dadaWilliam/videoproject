@@ -23,4 +23,4 @@
 python初级学员、大学生、系统设计人员
 
 ### 技术栈
-python/django/nginx/mysql/semantic-css/jquery/html
+python/django/nginx/semantic-css/jquery/html
