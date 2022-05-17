@@ -1,0 +1,13 @@
+gunicorn --bind unix:/tmp/edu.iamdada.xyz.socket videoproject.wsgi:application
+ln -s /etc/nginx/sites-available/edu.iamdada.xyz /etc/nginx/sites-enabled
+cd /home/sites/edu.iamdada.xyz/videoproject-master
+
+mkdir -p /home/sites/edu.iamdada.xyz
+cd /home/sites/edu.iamdada.xyz
+virtualenv  env
+source env/bin/activate
+pip3 install -r requirements.txt
+python3 manage.py collectstatic
+python3 manage.py migrate
+
+nohup /home/sites/edu.iamdada.xyz/env/bin/gunicorn  --bind unix:/tmp/edu.iamdada.xyz.socket videoproject.wsgi:application &

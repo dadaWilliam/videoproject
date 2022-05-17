@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% load video_tag %}
+
+{% block content %}
+
+<div class="classification">
+    <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
+    {% for item in classification_list %}
+    <a class="ui {% if c == item.id|stringformat:'s' %}red{% endif %} label" href="?c={{ item.id }}">{{ item.title }}</a>
+    {% endfor %}
+</div>
+
+<div class="ui hidden divider"></div>
+<div class="ui orange message " >
+    <i class="close icon"></i>
+    <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
+    <div class="header">📏大大&奇奇制作🏫</div>
+    <p>遇见问题，请前往个人中心进行反馈 </p>
+
+<script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
+<script>
+    
+    $('.message .close').
+          click(function () {
+              $(this).
+              closest('.message').
+              transition('fly');
+          });
+
+</script>
+</div>
+
+
+
+<div class="ui stackable grid">
+    {% for item in video_list %}
+    <div class="sixteen wide mobile eight wide tablet four wide computer column">
+        <div class="ui card">
+            <a class="image" href="{% url 'video:detail' item.pk %}">
+                {% thumbnail item.cover "300x200" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}">
+                {% empty %}
+                {% endthumbnail %}
+                <i class="large play icon v-play-icon"></i>
+            </a>
+            <div class="content">
+                <a class="header" href="{% url 'video:detail' item.pk %}">{{ item.title }}</a>
+                <div class="meta">
+                    <span class="date">发布于{{ item.create_time|time_since}}</span>
+                </div>
+                <div class="description">
+                    {{ item.view_count}}次观看
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <h3>暂无数据</h3>
+    {% endfor %}
+</div>
+
+{% include "base/page_nav.html" %}
+
+{% endblock content %}
