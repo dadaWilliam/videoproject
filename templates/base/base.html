@@ -50,7 +50,10 @@
     var search_url = "{% url 'video:search' %}"
 </script>
 <script src="{% static 'js/header.js' %}"></script>
-
+<script src="{% static 'js/watermark.js' %}"></script>
+<script type="text/javascript">
+watermark({"watermark_txt":" {{user.username}} "});
+</script>
 {% block javascript %}
 {% endblock javascript %}
 
