@@ -20,9 +20,18 @@
                     {{ form.username }}
                 </div>
                 <div class="field">
-                    <label>过期时间(默认永久有效)</label>
+                    <label>过期时间:</label>
+                    <div>
+                    {% if user.expire %}
+                    <a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>
+                    {% else %}
+                    <a class="ui teal label">永久有效</a>
+                    {% endif %}
+                    </div>
+                    <label> </label>
                     {{form.expire}}
                 </div>
+                
                 <div class="field">
                     <div class="ui checkbox">
                       {{form.is_staff}}
