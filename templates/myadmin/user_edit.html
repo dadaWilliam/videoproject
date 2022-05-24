@@ -20,11 +20,16 @@
                     {{ form.username }}
                 </div>
                 <div class="field">
+                    <label>过期时间(默认永久有效)</label>
+                    {{form.expire}}
+                </div>
+                <div class="field">
                     <div class="ui checkbox">
                       {{form.is_staff}}
                       <label>管理员账号</label>
                     </div>
                 </div>
+
 
                 <button class="ui primary button" type="submit">保存</button>
 

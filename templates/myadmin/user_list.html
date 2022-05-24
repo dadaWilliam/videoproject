@@ -17,7 +17,7 @@
     <div class="row">
         <table class="ui unstackable single line striped selectable table">
             <thead>
-            <tr><th>用户名</th><th>账号类型</th><th>加入时间</th><th>操作</th></tr>
+            <tr><th>用户名</th><th>账号类型</th><th>加入时间</th><th>失效时间</th><th>操作</th></tr>
             </thead>
             <tbody class="video-list">
 
@@ -26,6 +26,7 @@
                 <td> {{item.username}}</td>
                 <td> {% if item.is_staff %}管理员{% else %}普通{% endif %}</td>
                 <td> {{item.date_joined|date:'Y-m-d H:i'}}</td>
+                <td> {% if item.expire %}{{item.expire|date:'Y-m-d H:i'}}{% else %}永久有效{% endif %}</td>
                 <td>
                     <a class="ui primary button user-edit" href="{% url 'myadmin:user_edit' item.id %}">编辑</a>
                     <a class="ui button user-delete">删除</a>
