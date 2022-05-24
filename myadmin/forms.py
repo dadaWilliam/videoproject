@@ -24,7 +24,7 @@ class UserLoginForm(AuthenticationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ['username', 'password', ]
 
     error_messages = {'invalid_login': '用户名或密码错误', }
 
@@ -105,9 +105,10 @@ class UserAddForm(forms.ModelForm):
                                    'required': '密码不能为空',
                                },
                                widget=forms.PasswordInput(attrs={'placeholder': '请输入密码'}))
+    expire = forms.DateTimeField(widget=forms.DateInput(attrs={'type':'date'}))
     class Meta:
         model = User
-        fields = ['username', 'password','is_staff' ]
+        fields = ['username', 'password', 'is_staff', 'expire']
 
 
 def username_validate(value):
@@ -124,10 +125,10 @@ class UserEditForm(forms.ModelForm):
                                   'required': '用户名不能为空'
                               },
                               widget=forms.TextInput(attrs={'placeholder': '请输入用户名'}))
-
+    expire = forms.DateTimeField(widget=forms.DateInput(attrs={'type': 'date'}))
     class Meta:
         model = User
-        fields = ['username','is_staff']
+        fields = ['username', 'is_staff', 'expire']
 
 
 class ClassificationAddForm(forms.ModelForm):

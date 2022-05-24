@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import *
 from django.views import generic
 from ratelimit.decorators import ratelimit
+from datetime import datetime, timedelta
 
 from django.contrib.sessions.models import Session
 from django.utils import timezone
@@ -18,10 +19,10 @@ from .forms import ProfileForm, SignUpForm, UserLoginForm, ChangePwdForm, Subscr
 
 User = get_user_model()
 
-
 @ratelimit(key='ip', rate='10/m')
 def login(request):
     was_limited = getattr(request, 'limited', False)
+
     if request.method == 'POST':
         next = request.POST.get('next', '/')
         form = UserLoginForm(request=request, data=request.POST)
@@ -33,15 +34,31 @@ def login(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+
             if user is not None:
-                auth_login(request, user)
-                session_key= request.session.session_key #单一设备登陆
-                for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
-                    data = session.get_decoded()
-                    if data.get('_auth_user_id', None) == str(request.user.id):
-                        session.delete()
-                # return redirect('home')
-                return redirect(next)
+                if user.expire is not None:
+                    if datetime.now() - user.expire >= timedelta(days=0):
+                        messages.warning(request, "用户已失效，请联系管理员")
+                        #return HttpResponse("用户已失效，请联系管理员")
+                        #return render(request, 'registration/login.html', {'form': form, 'next': next, })
+                    else:
+                        auth_login(request, user)
+                        session_key= request.session.session_key #单一设备登陆
+                        for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                            data = session.get_decoded()
+                            if data.get('_auth_user_id', None) == str(request.user.id):
+                                session.delete()
+                        # return redirect('home')
+                        return redirect(next)
+                else:
+                    auth_login(request, user)
+                    session_key = request.session.session_key  # 单一设备登陆
+                    for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                        data = session.get_decoded()
+                        if data.get('_auth_user_id', None) == str(request.user.id):
+                            session.delete()
+                    # return redirect('home')
+                    return redirect(next)
         else:
             print(form.errors)
     else:
@@ -50,6 +67,7 @@ def login(request):
         if was_limited:
             messages.warning(request, "操作太频繁了，请1分钟后再试")
             return render(request, 'registration/login.html', {'form': form, 'next': next})
+
     print(next)
     return render(request, 'registration/login.html', {'form': form, 'next':next})
 

@@ -1,16 +1,18 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from datetime import datetime, timedelta
 class User(AbstractUser):
     GENDER_CHOICES = (
         ('M', '男'),
         ('F', '女'),
     )
+
     nickname = models.CharField(blank=True, null=True, max_length=20)
     avatar = models.FileField(upload_to='avatar/')
     mobile = models.CharField(blank=True, null=True, max_length=13)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES,blank=True, null=True)
     subscribe = models.BooleanField(default=False)
+    expire = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
 
     class Meta:
         db_table = "v_user"
