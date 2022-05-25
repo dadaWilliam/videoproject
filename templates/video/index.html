@@ -5,6 +5,37 @@
 
 {% block content %}
 
+<div class="loading-div">
+    <i class="fa fa-spinner fa-pulse fa-3x fa-fw "></i>
+    <span class="sr-only">加载中...</span>
+</div>
+<style>
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
+    overflow: hidden;
+    text-align: center;
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {    
+        $(".loading-div").hide();
+        $('body').css('overflow','scroll');
+    }
+  }
+</script>
+
 <div class="classification">
     <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
     {% for item in classification_list %}
@@ -16,10 +47,10 @@
 <div class="ui orange message " >
     <i class="close icon"></i>
     <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
-    <div class="header">📏 Wlliam & Match 制作🏫</div>
+    <div class="header">📏 William & Match 制作🏫</div>
     <p>遇见问题，请前往个人中心进行反馈 </p>
 
-<script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+
 <script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
     

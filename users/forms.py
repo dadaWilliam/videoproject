@@ -13,7 +13,7 @@ def avatar_file_size(value):
 class ProfileForm(forms.ModelForm):
     nickname = forms.CharField(min_length=1,max_length=20,required=False,
                                error_messages={
-                                   'min_length': '昵称至少4个字符',
+                                   'min_length': '昵称至少1个字符',
                                    'min_length': '昵称不能多于20个字符',
                                },
                                widget=forms.TextInput())
@@ -40,9 +40,9 @@ class ProfileForm(forms.ModelForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(min_length=4,max_length=30,
+    username = forms.CharField(min_length=2,max_length=30,
                                error_messages={
-                                   'min_length': '用户名不少于4个字符',
+                                   'min_length': '用户名不少于2个字符',
                                    'max_length': '用户名不能多于30个字符',
                                    'required': '用户名不能为空',
                                },
@@ -63,9 +63,9 @@ class UserLoginForm(AuthenticationForm):
 
 
 class SignUpForm(UserCreationForm):
-    username = forms.CharField(min_length=4,max_length=30,
+    username = forms.CharField(min_length=2,max_length=30,
                                error_messages={
-                                   'min_length': '用户名不少于4个字符',
+                                   'min_length': '用户名不少于2个字符',
                                    'max_length': '用户名不能多于30个字符',
                                    'required': '用户名不能为空',
                                },

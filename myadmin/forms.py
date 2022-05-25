@@ -7,9 +7,9 @@ from video.models import Video, Classification
 
 
 class UserLoginForm(AuthenticationForm):
-    username = forms.CharField(min_length=4,max_length=30,
+    username = forms.CharField(min_length=2,max_length=30,
                                error_messages={
-                                   'min_length': '用户名不少于4个字符',
+                                   'min_length': '用户名不少于2个字符',
                                    'max_length': '用户名不能多于30个字符',
                                    'required': '用户名不能为空',
                                },
@@ -91,9 +91,9 @@ class VideoEditForm(forms.ModelForm):
 
 
 class UserAddForm(forms.ModelForm):
-    username = forms.CharField(min_length=4,max_length=30,
+    username = forms.CharField(min_length=2,max_length=30,
                                error_messages={
-                                   'min_length': '用户名不少于4个字符',
+                                   'min_length': '用户名不少于2个字符',
                                    'max_length': '用户名不能多于30个字符',
                                    'required': '用户名不能为空',
                                },
@@ -117,10 +117,10 @@ def username_validate(value):
 
 
 class UserEditForm(forms.ModelForm):
-    username = forms.CharField(min_length=4, max_length=30, required=True,
+    username = forms.CharField(min_length=2, max_length=30, required=True,
                                validators=[username_validate],
                               error_messages={
-                                  'min_length': '至少4个字符',
+                                  'min_length': '至少2个字符',
                                   'max_length': '不能多于30个字符',
                                   'required': '用户名不能为空'
                               },
