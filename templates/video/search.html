@@ -4,6 +4,48 @@
 
 {% block content %}
 
+<div class="loading-div">
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在搜索中...</p>
+        </div>
+      </div>
+</div>
+<style>
+.main{
+	display: none;
+}
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
+    overflow: hidden;
+    text-align: center;
+    
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {    
+        $(".loading-div").hide();
+        $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
+       
+    }
+  }
+</script>
+<div class="main">
 <h3 class="ui header">搜索结果</h3>
 <div class="ui unstackable items">
 
@@ -24,7 +66,7 @@
     {% endfor %}
 
 </div>
-
+</div>
 {% include "base/page_nav.html" %}
 
 

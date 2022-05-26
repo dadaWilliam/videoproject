@@ -6,10 +6,19 @@
 {% block content %}
 
 <div class="loading-div">
-    <i class="fa fa-spinner fa-pulse fa-3x fa-fw "></i>
-    <span class="sr-only">加载中...</span>
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在为您获取内容...</p>
+        </div>
+      </div>
+   
 </div>
 <style>
+.main{
+		       display: none;
+		}
 .loading-div {
     width: 1800px;
     height: 720px;
@@ -32,10 +41,11 @@
     if (document.readyState == "complete") {    
         $(".loading-div").hide();
         $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
     }
   }
 </script>
-
+<div class="main">
 <div class="classification">
     <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
     {% for item in classification_list %}
@@ -48,7 +58,9 @@
     <i class="close icon"></i>
     <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
     <div class="header">📏 William & Match 制作🏫</div>
-    <p>遇见问题，请前往个人中心进行反馈 </p>
+    
+    <p>上次登录时间为 {{user.last_login}} 😄 </p>
+    <p>遇见问题，请前往个人中心进行反馈 🤔</p>
 
 
 <script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
@@ -90,7 +102,7 @@
     <h3>暂无数据</h3>
     {% endfor %}
 </div>
-
+</div>
 {% include "base/page_nav.html" %}
 
 {% endblock content %}

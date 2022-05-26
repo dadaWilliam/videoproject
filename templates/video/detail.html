@@ -8,10 +8,18 @@
 {% block content %}
 
 <div class="loading-div">
-    <i class="fa fa-spinner fa-pulse fa-3x fa-fw "></i>
-    <span class="sr-only">加载中...</span>
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在为您加载视频内容...</p>
+        </div>
+      </div>
 </div>
 <style>
+.main{
+	display: none;
+}
 .loading-div {
     width: 1800px;
     height: 720px;
@@ -21,6 +29,7 @@
     color: #555;
     overflow: hidden;
     text-align: center;
+    
   }
   .loading-div::before {
     display: inline-block;
@@ -34,14 +43,15 @@
     if (document.readyState == "complete") {    
         $(".loading-div").hide();
         $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
+       
     }
   }
 </script>
-
+<div class="main">
 <div class="ui stackable two column grid">
     <div class=" twenty wide mobile fifteen wide tablet ten wide computer column  ">
-        <video class="video" autoplay="autoplay"  controls="controls" controlslist="nodownload"
-               disablePictureInPicture>
+        <video class="video" autoplay="autoplay"  controls="controls" controlslist="nodownload" disablePictureInPicture>
             <source src="{{video.file.url}}" type="video/mp4">
         </video>
         
@@ -95,7 +105,7 @@
         {% include "video/ad.html" %}
     </div>
 </div>
-
+</div>
 {% endblock content %}
 
 {% block javascript %}
