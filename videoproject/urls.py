@@ -21,6 +21,14 @@ from django.conf.urls import re_path
 from video import views
 from django.views.static import serve
 
+from rest_framework.routers import DefaultRouter
+from video import views
+
+router = DefaultRouter()
+router.register(r'video', views.VideoViewSet)
+router.register(r'classification', views.ClassificationViewSet)
+router.register(r'user', views.UserViewSet)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/',include('users.urls')),
@@ -28,7 +36,12 @@ urlpatterns = [
     path('video/',include('video.urls')),
     path('comment/',include('comment.urls')),
     path('', views.IndexView.as_view(), name='home'), # 默认首页
+    path('api-auth/', include('rest_framework.urls')),
+    # drf 注册路由
+    path('api/', include(router.urls)),
     re_path('^static/(?P<path>.*)$', serve, {"document_root": settings.STATIC_ROOT}),
     re_path('^upload/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT}),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+handler404 = views.page_not_found

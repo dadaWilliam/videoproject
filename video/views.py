@@ -3,14 +3,42 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
-
+from video.serializers import *
 
 from helpers import get_page_list, ajax_required
 from .forms import CommentForm
 from .models import Video, Classification
+from users.models import User
+
+from video.permissions import IsAdminUserOrReadOnly
+from rest_framework import viewsets
+from rest_framework import filters
 
 def page_not_found(request, exception):
     return render(request, "404.html",)
+
+#api
+class UserViewSet(viewsets.ModelViewSet):
+    """分类视图集"""
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+class ClassificationViewSet(viewsets.ModelViewSet):
+    """分类视图集"""
+    queryset = Classification.objects.all()
+    serializer_class = ClassificationSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+class VideoViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializer
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title']
+
+###
 
 class IndexView(generic.ListView):
     model = Video

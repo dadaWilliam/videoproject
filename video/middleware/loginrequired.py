@@ -9,7 +9,7 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
         url = request.path_info
-        if url.startswith('/static/'):
+        if url.startswith('/static/') or url.startswith('/api/'):
             return self.get_response(request)
         if not request.user.is_authenticated and request.path_info not in self.open_urls:
             return redirect(self.login_url + '?next=' + request.path)

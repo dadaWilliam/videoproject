@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'users',
     'myadmin',
     'comment',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
