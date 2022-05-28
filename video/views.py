@@ -8,11 +8,14 @@ from video.serializers import *
 from helpers import get_page_list, ajax_required
 from .forms import CommentForm
 from .models import Video, Classification
-from users.models import User
+from users.models import User,Token
 
 from video.permissions import IsAdminUserOrReadOnly
 from rest_framework import viewsets
 from rest_framework import filters
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
 
 def page_not_found(request, exception):
     return render(request, "404.html",)
@@ -22,23 +25,61 @@ class UserViewSet(viewsets.ModelViewSet):
     """分类视图集"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = (IsAuthenticated,)
+    #permission_classes = [IsAdminUserOrReadOnly]
 
 class ClassificationViewSet(viewsets.ModelViewSet):
     """分类视图集"""
     queryset = Classification.objects.all()
     serializer_class = ClassificationSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = (IsAuthenticated,)
+    #permission_classes = [IsAdminUserOrReadOnly]
 
 class VideoViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.all()
     serializer_class = VideoSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = (IsAuthenticated,)
+    # permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
+#login token
+def generate_token(username):
+    """根据用户名和时间，进行MD5值"""
+    import time
+    import hashlib
+
+    md5 = hashlib.md5(username.encode('utf-8'))
+    md5.update(str(time.time()).encode('utf-8'))
+
+    return md5.hexdigest()
+
+class AuthView(APIView):
+    def post(self, request, *args, **kwargs):
+        res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
+               'msg': None,   # 错误信息
+               'token': None}
+
+        username = request._request.POST.get('username')
+        pwd = request._request.POST.get('pwd')
+        #print('username:',username)
+        #print('pwd:',pwd)
+        user_obj = authenticate(username=username, password=pwd)
+        #user_obj = User.objects.filter(username=username, password=pwd).first()
+        if user_obj:
+            # 如果用户存在，那么生成token并更新
+            token = generate_token(username)
+            Token.objects.update_or_create(user=user_obj, defaults={'token': token})
+            res['token'] = token
+        else:
+            res['code'] = 1001
+            res['msg'] = '用户名或密码错误'
+
+        return JsonResponse(res)
 
 ###
+
+
 
 class IndexView(generic.ListView):
     model = Video

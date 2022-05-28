@@ -14,10 +14,13 @@ class User(AbstractUser):
     subscribe = models.BooleanField(default=False)
     expire = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
 
+
     class Meta:
         db_table = "v_user"
 
-
+class Token(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)  # 一对一关系
+    token = models.CharField(max_length=64)
 
 class Feedback(models.Model):
     contact = models.CharField(blank=True, null=True, max_length=20)

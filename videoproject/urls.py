@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.conf.urls import re_path
+from django.conf.urls import re_path,url
 from video import views
 from django.views.static import serve
 
@@ -28,6 +28,11 @@ router = DefaultRouter()
 router.register(r'video', views.VideoViewSet)
 router.register(r'classification', views.ClassificationViewSet)
 router.register(r'user', views.UserViewSet)
+#jwt 验证
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,9 +41,13 @@ urlpatterns = [
     path('video/',include('video.urls')),
     path('comment/',include('comment.urls')),
     path('', views.IndexView.as_view(), name='home'), # 默认首页
+    url(r'api/auth/$', views.AuthView.as_view(), name='auth'),  # 登录认证
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include('rest_framework.urls')),
     # drf 注册路由
     path('api/', include(router.urls)),
+
     re_path('^static/(?P<path>.*)$', serve, {"document_root": settings.STATIC_ROOT}),
     re_path('^upload/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT}),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

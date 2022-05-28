@@ -105,7 +105,7 @@ class UserAddForm(forms.ModelForm):
                                    'required': '密码不能为空',
                                },
                                widget=forms.PasswordInput(attrs={'placeholder': '请输入密码'}))
-    expire = forms.DateTimeField(required=False, widget=forms.DateInput(attrs={'type':'date'}))
+    expire = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type':'datetime-local'}))
     class Meta:
         model = User
         fields = ['username', 'password', 'is_staff', 'expire']
@@ -125,7 +125,7 @@ class UserEditForm(forms.ModelForm):
                                   'required': '用户名不能为空'
                               },
                               widget=forms.TextInput(attrs={'placeholder': '请输入用户名'}))
-    expire = forms.DateTimeField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    expire = forms.DateTimeField(required=False, widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}))
     class Meta:
         model = User
         fields = ['username', 'is_staff', 'expire']
