@@ -21,6 +21,7 @@ class User(AbstractUser):
 class Token(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)  # 一对一关系
     token = models.CharField(max_length=64)
+    create_time = models.DateTimeField(auto_now=True, auto_now_add=False)
 
 class Feedback(models.Model):
     contact = models.CharField(blank=True, null=True, max_length=20)

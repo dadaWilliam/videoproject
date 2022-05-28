@@ -17,6 +17,8 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 
+from datetime import datetime, timedelta
+
 def page_not_found(request, exception):
     return render(request, "404.html",)
 
@@ -58,6 +60,7 @@ class AuthView(APIView):
     def post(self, request, *args, **kwargs):
         res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
                'msg': None,   # 错误信息
+               'create_time': datetime.now(),
                'token': None}
 
         username = request._request.POST.get('username')
@@ -66,14 +69,23 @@ class AuthView(APIView):
         #print('pwd:',pwd)
         user_obj = authenticate(username=username, password=pwd)
         #user_obj = User.objects.filter(username=username, password=pwd).first()
-        if user_obj:
-            # 如果用户存在，那么生成token并更新
-            token = generate_token(username)
-            Token.objects.update_or_create(user=user_obj, defaults={'token': token})
-            res['token'] = token
+        if user_obj: # 如果用户存在，那么生成token并更新
+            if user_obj.expire is not None:
+                if datetime.now() - user_obj.expire >= timedelta(days=0): #用户失效
+                    res['code'] = 1002
+                    res['msg'] = 'User expired'
+                else:
+                    token = generate_token(username)
+
+                    Token.objects.update_or_create(user=user_obj, defaults={'token': token, })
+                    res['token'] = token
+            else:#永久有效用户
+                token = generate_token(username)
+                Token.objects.update_or_create(user=user_obj, defaults={'token': token})
+                res['token'] = token
         else:
             res['code'] = 1001
-            res['msg'] = '用户名或密码错误'
+            res['msg'] = 'Username or Password error'
 
         return JsonResponse(res)
 
