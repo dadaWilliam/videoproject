@@ -23,6 +23,7 @@ from django.views.static import serve
 
 from rest_framework.routers import DefaultRouter
 from video import views
+from rest_framework.documentation import include_docs_urls
 
 router = DefaultRouter()
 router.register(r'video', views.VideoViewSet)
@@ -41,6 +42,8 @@ urlpatterns = [
     path('video/',include('video.urls')),
     path('comment/',include('comment.urls')),
     path('', views.IndexView.as_view(), name='home'), # 默认首页
+
+    path('docs/', include_docs_urls(title='说明文档')),
     url(r'api/auth/$', views.AuthView.as_view(), name='auth'),  # 登录认证
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

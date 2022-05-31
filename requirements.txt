@@ -6,3 +6,4 @@ pillow
 django-filter
 djangorestframework
 djangorestframework-simplejwt
+coreapi
