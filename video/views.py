@@ -59,7 +59,7 @@ def generate_token(username):
 class AuthView(APIView):
     def post(self, request, *args, **kwargs):
         res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
-               'msg': None,   # 错误信息
+               'msg': 'OK',   # 错误信息
                'create_time': datetime.now(),
                'token': None}
 
