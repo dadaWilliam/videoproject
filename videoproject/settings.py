@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wg*kgsb5$ok23k3t%g)^2mf6++v(o(j1d%-vfd0k(@f(@jg(qh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -157,6 +157,7 @@ STATICFILES_DIRS = (
     ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ),
 )
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_COOKIE_AGE = 86400
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
