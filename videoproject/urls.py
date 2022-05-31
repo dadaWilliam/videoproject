@@ -45,8 +45,8 @@ urlpatterns = [
 
     path('docs/', include_docs_urls(title='说明文档')),
     url(r'api/auth/$', views.AuthView.as_view(), name='auth'),  # 登录认证
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include('rest_framework.urls')),
     # drf 注册路由
     path('api/', include(router.urls)),

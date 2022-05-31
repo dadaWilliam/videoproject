@@ -171,8 +171,8 @@ mimetypes.add_type('application/javascript', '.js')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 自定义认证类路径
         'video.authentication.CustomAuthentication',
 
