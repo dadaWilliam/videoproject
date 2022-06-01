@@ -53,19 +53,33 @@
     {% endfor %}
 </div>
 
-<div class="ui hidden divider"></div>
 <div class="ui orange message " >
     <i class="close icon"></i>
     <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
     <div class="header">📏 William & Match 制作🏫</div>
     
-    <p>账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 😄 </p>
-    <p>遇见问题，请前往个人中心进行反馈 🤔</p>
-
-
+    <p>账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🚩 </p>
+    <p>🎉APP 开发进度:🎈</p>
+    <div class="ui small red progress" id="ios">
+        <div class="bar">
+            <div class="progress"></div>
+        </div>
+        <div class="label">ios</div>
+      </div>
+      <div class="ui small yellow progress" id="android">
+        <div class="bar">
+            <div class="progress"></div>
+        </div>
+        <div class="label">android</div>
+      </div>
 <script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
 <script>
-    
+    $('#ios').progress({
+        percent: 30
+    });
+    $('#android').progress({
+        percent: 70
+    });
     $('.message .close').
           click(function () {
               $(this).
@@ -75,7 +89,7 @@
 
 </script>
 </div>
-
+<br/>
 <div class="ui stackable grid">
     {% for item in video_list %}
     <div class="sixteen wide mobile eight wide tablet four wide computer column">
@@ -99,6 +113,7 @@
         </div>
     </div>
     {% empty %}
+    <div></div>
     <h3>暂无数据</h3>
     {% endfor %}
 </div>
