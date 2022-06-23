@@ -22,8 +22,10 @@ $(function () {
                     $('#like-count').text(likes)
                     if(user_liked == 0){
                         $('#like').removeClass("grey").addClass("red")
+                        $('#like-count').removeClass("grey").addClass("red")
                     }else{
                         $('#like').removeClass("red").addClass("grey")
+                        $('#like-count').removeClass("red").addClass("grey")
                     }
                 }else{
                     var msg = data.msg
@@ -55,9 +57,11 @@ $(function () {
                     var user_collected = data.user_collected
                     $('#collect-count').text(collects)
                     if(user_collected == 0){
-                        $('#star').removeClass("grey").addClass("red")
+                        $('#star').removeClass("grey").addClass("yellow")
+                        $('#collect-count').removeClass("grey").addClass("yellow")
                     }else{
-                        $('#star').removeClass("red").addClass("grey")
+                        $('#star').removeClass("yellow").addClass("grey")
+                        $('#collect-count').removeClass("yellow").addClass("grey")
                     }
                 }else{
                     var msg = data.msg

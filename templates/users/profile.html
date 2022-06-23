@@ -12,10 +12,12 @@
         <div class="twelve wide column">
             <div class="v-settings-content">
 
+               
                 <form class="ui form" novalidate method="post" action="{% url 'users:profile' form.instance.pk %}"
                       enctype="multipart/form-data" role="form">
                     {% csrf_token %}
                     <div class="sixteen wide inline field v-form-field">
+
                         <label>头像</label>
                         <div class="v-inline-middle">
                             <label for="id_avatar">
@@ -57,6 +59,14 @@
                                 <div class="item" data-value="F">女</div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="sixteen wide inline field v-form-field">
+                        <label>过期时间:</label>
+                        {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %}
+                        <div class="circular ui icon button" data-tooltip="如错误，请联系管理员！" data-position="right center">
+                            <i class="question circle outline icon"></i>
+                          </div>
                     </div>
 
                     <button class="ui primary button" type="submit">保存</button>

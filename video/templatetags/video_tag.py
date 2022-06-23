@@ -36,6 +36,6 @@ def user_liked_class(video, user):
 def user_collected_class(video, user):
     collected = video.user_collected(user)
     if collected == 0:
-        return "red"
+        return "yellow"
     else:
         return "grey"

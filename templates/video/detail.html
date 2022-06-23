@@ -62,16 +62,38 @@
                 {{video.desc}}
             </div>
             <div class="extra content video-view-operation">
-                <span class="left floated like">
+
+                <div class="ui labeled button"   tabindex="0">
+                    <div class="ui {%  user_liked_class video user %} button" id="like" video-id="{{ video.id }}">
+                      <i class="heart icon"></i> 
+                      点赞
+                    </div>
+                    <a class="ui basic {%  user_liked_class video user %} left pointing label" id="like-count">
+                        <span>{{ video.count_likers }}</span>
+                    </a>
+                  </div>
+                  
+
+                  <div class="ui labeled button"   tabindex="0">
+                    <div class="ui {%  user_collected_class video user %}  button" id="star" video-id="{{ video.id }}">
+                      <i class="bookmark icon"></i> 
+                      收藏
+                    </div>
+                    <a class="ui basic {%  user_collected_class video user %} left pointing label" id="collect-count">
+                        <span>{{ video.count_collecters }}</span>
+                    </a>
+                  </div>
+
+                <!-- <span class="left floated like">
                     <i class="like {%  user_liked_class video user %} icon cursor" id="like"
                        video-id="{{ video.id }}"></i>
                     <span id="like-count">{{ video.count_likers }}</span>
-                </span>
-                <span class="right floated star">
+                </span> -->
+                <!-- <span class="right floated star">
                     <i class="bookmark {%  user_collected_class video user %}  icon cursor" id="star"
                        video-id="{{ video.id }}"></i>
                     <span id="collect-count">{{ video.count_collecters }}</span>
-                </span>
+                </span> -->
             </div>
             <div class="ui divider"></div>
         </div>
