@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wg*kgsb5$ok23k3t%g)^2mf6++v(o(j1d%-vfd0k(@f(@jg(qh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'myadmin',
     'comment',
     'rest_framework',
+    'user_visit',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +45,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'users.middleware.ippass.XForwardedForMiddleware',
     'video.middleware.loginrequired.LoginRequiredMiddleware',
+    'user_visit.middleware.UserVisitMiddleware',
 ]
 
 SITE_URL = 'edu.iamdada.xyz'

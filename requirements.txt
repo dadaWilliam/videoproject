@@ -7,3 +7,4 @@ django-filter
 djangorestframework
 djangorestframework-simplejwt
 coreapi
+django-user-visit
