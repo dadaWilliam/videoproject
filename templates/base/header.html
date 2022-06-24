@@ -7,14 +7,14 @@
             <img class="logo" src="{% static 'img/logo.png' %}">
             学霸空间
         </a>
+        
         <div class="v-header-extra">
-            <div class="ui small icon input v-video-search" data-tooltip="使用回车进行搜索" data-position="bottom center">
-                <input class="prompt" value="{{ q }}" type="text" placeholder="搜索" id="v-search" >
+            <div class="ui small icon input v-video-search" data-tooltip="使用回车进行搜索" data-position="bottom center" ;>
+                <input class="prompt" value="{{ q }}" type="text" placeholder="搜索" id="v-search"  >
                 <i id="search" class="search icon" style="cursor:pointer;"></i>
             </div>
-
             {% if user.is_authenticated %}
-            <div class="ui inline dropdown" id="v-header-avatar" style="">
+            <div class="ui inline dropdown" id="v-header-avatar" >
                 <div class="" style="display:inline-block;font-weight:bold;">
                     {% thumbnail user.avatar "200x200" crop="center" as im %}
                     <img class="ui avatar image" src="{{ im.url }}">
@@ -35,7 +35,11 @@
                     </div>
                     <div class="item" onclick="window.location='{% url 'users:like_videos' user.pk %}';">
                         <i class="heart icon"></i>
-                        <span>我的喜欢</span>
+                        <span>我的点赞</span>
+                    </div>
+                    <div class="item" onclick="window.location='{% url 'history' %}';">
+                        <i class="history icon"></i>
+                        <span>历史记录</span>
                     </div>
                     {% if user.is_superuser %}
                     <div class="item" onclick="window.location='{% url 'myadmin:index'  %}';">
@@ -44,7 +48,7 @@
                     </div>
                     <div class="item" onclick="window.location='admin' ">
                         <i class="bug icon"></i>
-                        <span>Django</span>
+                        <span>Django </span>
                     </div>
                     <div class="item" onclick="window.location='api';">
                         <i class="code icon"></i>

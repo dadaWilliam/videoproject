@@ -1,0 +1,50 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load thumbnail %}
+{% load video_tag %}
+
+{% block content %}
+
+<div class="main">
+    <h3 class="ui header">历史记录</h3>
+    <div class="ui unstackable items">
+        {% for history in history_list %}
+        <div class="item">
+            <div class="ui tiny image">
+                {% thumbnail history.content_object.cover "300x200" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}">
+                {% empty %}
+                {% endthumbnail %}
+            </div>
+            <div class="middle aligned content">
+              <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
+              <div>
+                {{ history.viewed_on|naturaltime }}
+                </div>
+            <div>
+            </div>
+            
+                <a class="ui tiny red button " href="{% url 'history_delete' history.pk  %}">删除</a>
+                
+            </div>
+        </div>
+        {% empty %}
+           <h3>暂无数据</h3>
+        {% endfor %}
+        
+        
+        
+    </div>
+</div>
+
+{% include "base/page_nav.html" %}
+
+{% endblock content %}
+{% block javascript %}
+<script  type="text/javascript" >
+$('.ui .dropdown').dropdown();
+</script>
+{% endblock javascript %}
+
+    

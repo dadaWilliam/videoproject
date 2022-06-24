@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'users',
     'myadmin',
     'comment',
+    'history',
     'rest_framework',
     'user_visit',
 ]
