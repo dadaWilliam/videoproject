@@ -18,6 +18,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import authenticate
 
 from datetime import datetime, timedelta
+from history.mixins import ObjectViewMixin
+
 
 def page_not_found(request, exception):
     return render(request, "404.html",)
@@ -140,7 +142,7 @@ class SearchListView(generic.ListView):
         context['q'] = self.q
         return context
 
-class VideoDetailView(generic.DetailView):
+class VideoDetailView(ObjectViewMixin, generic.DetailView):
     model = Video
     template_name = 'video/detail.html'
 

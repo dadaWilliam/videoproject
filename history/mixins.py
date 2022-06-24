@@ -8,7 +8,7 @@ class ObjectViewMixin:
             instance = None
         
         if request.user.is_authenticated and instance is not None:
-            object_viewed_signal.send(instance.__class__, instance=instance, request=request)
+            object_viewed_signal.send_robust(instance.__class__, instance=instance, request=request)
 
         return super(ObjectViewMixin, self).dispatch(request, *args, **kwargs)
     
