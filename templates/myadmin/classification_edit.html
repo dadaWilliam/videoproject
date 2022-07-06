@@ -21,6 +21,12 @@
                     {{ form.title }}
                 </div>
                 <div class="field">
+                    <label>最后修改时间:</label>
+                    <a class="ui green label"> {{ classification.time }}</a>
+                    <a class="ui red label"> 排列顺序：最近修改在前</a>
+                </div>
+                
+                <div class="field">
                     <div class="ui checkbox">
                       {{form.status}}
                       <label>是否启用</label>

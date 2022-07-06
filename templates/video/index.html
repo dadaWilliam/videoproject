@@ -51,13 +51,11 @@
 </script>
 
 <div class="main">
-<div class="classification">
-    
-    <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
-
-    {% for item in classification_list %}
-    <a class="ui {% if c == item.id|stringformat:'s' %}red{% endif %} unstackable label" href="?c={{ item.id }}" >{{ item.title }}</a>
-    {% endfor %}
+    <div class="classification">
+        <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
+        {% for item in classification_list %}
+        <a class="ui {% if c == item.id|stringformat:'s' %}red{% endif %} unstackable label" href="?c={{ item.id }}" >{{ item.title }}</a>
+        {% endfor %}
     </div>
     <style>
         a.ui.label{
@@ -65,45 +63,44 @@
         }
     </style>
    
-</div>
 
-<div class="ui orange message " >
-    <i class="close icon"></i>
-    <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
-    <p><a class="ui red label">新功能</a> 点赞👍, 收藏😍, 历史记录🤔</p>
-    <p><a class="ui blue label">新布局</a> 首页布局已优化</p>
-    <!-- <p>🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
-    <p>🌱APP(android+ios)开发中🐛 <a class="ui yellow label">2022.7.6</a></p>
-    <!-- <div class="ui red progress" id="ios">
-        <div class="bar">
-            <div class="progress"></div>
+    <div class="ui orange message " >
+        <i class="close icon"></i>
+        <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
+        <p><a class="ui red label">新功能</a> 点赞👍, 收藏😍, 历史记录🤔</p>
+        <p><a class="ui blue label">新布局</a> 首页布局已优化</p>
+        <!-- <p>🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
+        <p><a class="ui yellow label">2022.7.6</a>🌱APP(android+ios)开发中🐛 </p>
+        <!-- <div class="ui red progress" id="ios">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label">ios</div>
         </div>
-        <div class="label">ios</div>
-      </div>
-      <div class="ui yellow progress" id="android">
-        <div class="bar">
-            <div class="progress"></div>
-        </div>
-        <div class="label">android</div>
-      </div> -->
-<script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
-<script>
-    // $('#ios').progress({
-    //     percent: 30
-    // });
-    // $('#android').progress({
-    //     percent: 70
-    // });
-    $('.message .close').
-          click(function () {
-              $(this).
-              closest('.message').
-              transition('fly');
-          });
+        <div class="ui yellow progress" id="android">
+            <div class="bar">
+                <div class="progress"></div>
+            </div>
+            <div class="label">android</div>
+        </div> -->
+        <script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
+        <script>
+            // $('#ios').progress({
+            //     percent: 30
+            // });
+            // $('#android').progress({
+            //     percent: 70
+            // });
+            $('.message .close').
+                click(function () {
+                    $(this).
+                    closest('.message').
+                    transition('fly');
+                });
 
-</script>
-</div>
-<br/>
+        </script>
+    </div>
+
 <div class="ui grid">
     {% for item in video_list %}
     <div class="eight wide mobile four wide tablet four wide computer column">
@@ -133,6 +130,6 @@
 </div>
 </div>
 <div class="footer">
-{% include "base/page_nav.html" %}
+    {% include "base/page_nav.html" %}
 </div>
 {% endblock content %}

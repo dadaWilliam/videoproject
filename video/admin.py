@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
+class ClassificationTimeRead(admin.ModelAdmin):
+    readonly_fields = ('time',)
 
-# Register your models here.)
-admin.site.register(Classification)
+admin.site.register(Classification,ClassificationTimeRead)
 admin.site.register(Video)

@@ -20,6 +20,11 @@
                     {{ form.username }}
                 </div>
                 <div class="field">
+                    <label>密码更改</label>
+                    <a class="ui tiny red button" href="/admin/users/user/{{user.pk}}/password">重置密码</a>
+                </div>
+                
+                <div class="field">
                     <label>过期时间:</label>
                     <div>
                     {% if user.expire %}

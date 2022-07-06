@@ -107,7 +107,7 @@ class IndexView(generic.ListView):
         paginator = context.get('paginator')
         page = context.get('page_obj')
         page_list = get_page_list(paginator, page)
-        classification_list = Classification.objects.filter(status=True).values()
+        classification_list = Classification.objects.filter(status=True).order_by('-time').values()
         context['c'] = self.c
         context['classification_list'] = classification_list
         context['page_list'] = page_list
