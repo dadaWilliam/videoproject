@@ -52,11 +52,18 @@
 
 <div class="main">
 <div class="classification">
-    <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
     
+    <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
+
     {% for item in classification_list %}
-    <a class="ui {% if c == item.id|stringformat:'s' %}red{% endif %} stackable label" href="?c={{ item.id }}">{{ item.title }}</a>
+    <a class="ui {% if c == item.id|stringformat:'s' %}red{% endif %} unstackable label" href="?c={{ item.id }}" >{{ item.title }}</a>
     {% endfor %}
+    </div>
+    <style>
+        a.ui.label{
+            margin-top: 0.5em;
+        }
+    </style>
    
 </div>
 
@@ -96,9 +103,9 @@
 </script>
 </div>
 <br/>
-<div class="ui stackable grid">
+<div class="ui grid">
     {% for item in video_list %}
-    <div class="sixteen wide mobile eight wide tablet four wide computer column">
+    <div class="eight wide mobile four wide tablet four wide computer column">
         <div class="ui card">
             <a class="image" href="{% url 'video:detail' item.pk %}">
                 {% thumbnail item.cover "300x200" crop="center" as im %}
