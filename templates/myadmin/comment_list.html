@@ -17,7 +17,7 @@
     <div class="row">
         <table class="ui unstackable single line striped selectable table">
             <thead>
-            <tr><th>用户</th><th>昵称</th><th>评论内容</th></th><th>时间</th><th>操作</th></tr>
+            <tr><th>用户</th><th>昵称</th><th>视频</th><th>评论内容</th></th><th>时间</th><th>操作</th></tr>
             </thead>
             <tbody class="video-list">
 
@@ -25,6 +25,7 @@
             <tr comment-id="{{item.id}}">
                 <td> {{item.user_id}}:{{item.user.username}}</td>
                 <td> {{item.nickname}}</td>
+                <td> {{item.video_id}}:{{item.video.title}}</td>
                 <td> {{item.content}}</td>
                 <td> {{item.timestamp|date:'Y-m-d H:i'}}</td>
                 <td>

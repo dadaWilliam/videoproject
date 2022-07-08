@@ -20,7 +20,7 @@
     <div class=" right flex menu">
         <a class="item" href="{% url 'home' %}" target="_blank">前台</a>
         <a class="item" href="{% url 'myadmin:index' %}">后台</a>
-        <a class="item">{{ user }}</a>
+        <a class="item">{{ request.user.username }}</a>
         <a class="item" href="{% url 'myadmin:logout' %}">退出</a>
     </div>
     

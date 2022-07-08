@@ -17,18 +17,19 @@
                 {% empty %}
                 {% endthumbnail %}
             </div>
-            <div class="middle aligned content">
-              <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
-              <div>
-                {{ history.viewed_on|naturaltime }}
+            <div class="middle aligned content"> 
+                <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
+                <span style="float:right;">
+                    <a class="ui tiny red button " href="{% url 'history_delete' history.pk  %}" >删除</a>
+                </span>
+                <div>
+                    <span> {{ history.viewed_on|naturaltime }} </span>
                 </div>
-            <div>
             </div>
             
-                <a class="ui tiny red button " href="{% url 'history_delete' history.pk  %}">删除</a>
-                
-            </div>
+            
         </div>
+       
         {% empty %}
            <h3>暂无数据</h3>
         {% endfor %}
