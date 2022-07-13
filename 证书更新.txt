@@ -1,0 +1,1 @@
+acme.sh  --issue  -d edu.iamdada.xyz  --nginx

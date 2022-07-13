@@ -3,7 +3,7 @@ import requests
 api = 'http://127.0.0.1:8000/api/auth/'
 response = requests.post(url=api, data={'username': 'lena', 'pwd': '123'})
 print(response.text)
-response = requests.post(url=api, data={'username': 'dada', 'pwd': '123'})
+response = requests.post(url=api, data={'username': 'dada', 'pwd': 'Iamdada811'})
 print(response.text)
 
 index = response.text.find("token")

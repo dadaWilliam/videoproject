@@ -67,11 +67,11 @@
 
     <div class="ui orange message " >
         <i class="close icon"></i>
-        <div class="header">欢迎 {{user.username}} 来到学霸空间😀 </div>
+        <div class="header">欢迎 {{user.username}} 来到学霸空间😀 {{user_visit.remote_addr}}</div>
         <p><a class="ui red label">新功能</a> 点赞👍, 收藏😍, 历史记录🤔</p>
         <p><a class="ui blue label">新布局</a> 首页布局已优化</p>
         <!-- <p>🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
-        <p><a class="ui green label"> 2022.7.8</a>APP(android+ios)开发中🐛 </p>
+        <p><a class="ui green label"> 2022.7.9</a>APP(android+ios)开发中🐛 </p>
         <!-- <div class="ui red progress" id="ios">
             <div class="bar">
                 <div class="progress"></div>
@@ -131,6 +131,7 @@
 </div>
 </div>
 <div class="footer">
+    {% include 'base/back_to_top_func.html' %}
     {% include "base/page_nav.html" %}
 </div>
 {% endblock content %}
