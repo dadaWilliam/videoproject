@@ -2,6 +2,7 @@
 {% load static %}
 {% load thumbnail %}
 {% load video_tag %}
+{% load tctip_tags %}
 
 {% block content %}
 
@@ -51,6 +52,7 @@
 </script>
 
 <div class="main">
+    {% load_tctip %}
     <div class="classification">
         <a class="ui {% if c %}{% else %}red{% endif %} label" href="{% url 'home' %}">全部</a>
         {% for item in classification_list %}

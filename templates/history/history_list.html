@@ -20,7 +20,7 @@
             <div class="middle aligned content"> 
                 <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
                 <span style="float:right;">
-                    <a class="ui tiny red button " href="{% url 'history_delete' history.pk  %}" >删除</a>
+                    <a class="ui icon tiny red button " href="{% url 'history_delete' history.pk  %}" ><i class="trash alternate outline icon"></i></a>
                 </span>
                 <div>
                     <span> {{ history.viewed_on|naturaltime }} </span>

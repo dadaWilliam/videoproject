@@ -28,7 +28,7 @@
                     
                     </a>
                 <span style="float:right;">
-                    <a class="ui mini green button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" >去看看</a>
+                    <a class="ui icon tiny blue button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="eye icon"></i></a>
                 </span>
                 <div>
                     {{ notice.timestamp|date:"Y/m/d H:i" }}
