@@ -20,6 +20,7 @@ from video.models import Video, Classification
 from .forms import UserLoginForm, VideoPublishForm, VideoEditForm, UserAddForm, UserEditForm, ClassificationAddForm, \
     ClassificationEditForm
 from .models import MyChunkedUpload
+from notifications.signals import notify
 
 logger = logging.getLogger('my_logger')
 
@@ -366,4 +367,23 @@ def feedback_delete(request):
     instance = Feedback.objects.get(id=feedback_id)
     instance.delete()
     return JsonResponse({"code": 0, "msg": "success"})
+
+@ajax_required
+@require_http_methods(["POST"])
+def advertising(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"code": 1, "msg": "无权限"})
+    video_id = request.POST['video_id']
+    video = get_object_or_404(Video, id=video_id)
+    # 处理 POST 请求
+    notify.send(
+            request.user,
+            recipient=User.objects.all(),
+            verb='通知你观看',
+            target=video,
+            # action_object=new_comment,
+    )
+    return JsonResponse({"code": 0, "msg": "success"})
+
+
 

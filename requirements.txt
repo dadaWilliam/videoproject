@@ -8,3 +8,5 @@ djangorestframework
 djangorestframework-simplejwt
 coreapi
 django-user-visit
+django-notifications-hq
+django-top-notify

@@ -25,6 +25,8 @@ from rest_framework.routers import DefaultRouter
 from video import views
 from rest_framework.documentation import include_docs_urls
 
+import notifications.urls
+
 router = DefaultRouter()
 router.register(r'video', views.VideoViewSet)
 router.register(r'classification', views.ClassificationViewSet)
@@ -51,6 +53,11 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # drf 注册路由
     path('api/', include(router.urls)),
+    # notice
+    path('notice/', include('notice.urls', namespace='notice')),
+    # 通知
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path("top_notify/", include("django_top_notify.urls")),
 
     re_path('^static/(?P<path>.*)$', serve, {"document_root": settings.STATIC_ROOT}),
     re_path('^upload/(?P<path>.*)$', serve, {"document_root": settings.MEDIA_ROOT}),

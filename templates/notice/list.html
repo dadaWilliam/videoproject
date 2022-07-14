@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load humanize %}
+{% load thumbnail %}
+{% load video_tag %}
+
+{% block content %}
+
+<div class="main">
+    <h3 class="ui header">消息通知     <a class="ui mini red button" href="{% url 'notice:update' %}" style="float:right;">清空所有</a>
+    </h3>
+
+    <div class="ui unstackable items">
+        {% for notice in notices %}
+        <div class="item">
+            
+            <div class="ui tiny image">
+                {% thumbnail notice.target.cover "300x200" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}">
+                {% empty %}
+                {% endthumbnail %}
+            </div>
+            <div class="middle aligned content"> 
+                <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" >
+                    {% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %}
+                    {{ notice.verb }}
+                     <p>{{ notice.target.title }}</p>
+                    
+                    </a>
+                <span style="float:right;">
+                    <a class="ui mini green button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" >去看看</a>
+                </span>
+                <div>
+                    {{ notice.timestamp|date:"Y/m/d H:i" }}
+                </div>
+            </div>
+       </div>
+        {% empty %}
+           <h3>暂无通知</h3>
+        {% endfor %}
+        
+    </div>
+</div>
+
+{% include "base/page_nav.html" %}
+
+{% endblock content %}
+{% block javascript %}
+<script  type="text/javascript" >
+$('.ui .dropdown').dropdown();
+</script>
+{% endblock javascript %}
+
+    

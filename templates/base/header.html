@@ -1,7 +1,26 @@
 {% load static %}
 {% load thumbnail %}
+<!-- 引入notifications的模板标签 -->
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 
-<div class="ui menu">
+<link rel="stylesheet" href="{% static 'css/notification-top-bar.css' %}">
+
+    <div class="notification-top-bar-container" >
+        <div class="notification-top-bar">
+            <p></p>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="{% static 'js/notification-top-bar.js' %}"></script>
+    <script>
+        $(function () {
+            const url = "{% url 'django_top_notify:latest_system_notification' %}";
+            get_latest_system_notification(url);
+        })
+    </script>
+<div class="ui flex menu" style="margin-top: 0; ">
     <div class="ui container">
         <a href="/" class="borderless header item">
             <img class="logo" src="{% static 'img/logo.png' %}">
@@ -21,10 +40,33 @@
                     {% empty %}
                     <img class="ui avatar image" src="{% static 'img/img_default_avatar.png' %}">
                     {% endthumbnail %}
+                    <!-- 新增代码，小红点 -->
+                    {% if unread_count %}
+                        <svg viewBox="0 0 8 8"
+                            width="8px"
+                            height="8px">
+                            <circle cx="4"
+                                    cy="4"
+                                    r="4"
+                                    fill="#ff6b6b"
+                                    ></circle>
+                        </svg>
+                    {% endif %}
                     {{ user.username }}
                 </div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
+                    <div class="item" onclick="window.location='{% url 'notice:list' %}';">
+                        <i class="bell icon"></i>
+                        <span>通知消息</span>
+                            {% if unread_count %}
+                            <span>
+                                <a class="floating ui tiny red label">{{ unread_count }}</a>
+                                
+                            </span>
+                            {% endif %}
+                        
+                    </div>
                     <div class="item" onclick="window.location='{% url 'users:profile' user.pk %}';">
                         <i class="user icon"></i>
                         <span>个人资料</span>
@@ -72,3 +114,9 @@
         </div>
     </div>
 </div>
+<style>
+    .ui.floating.label{
+         margin: 0 0 0 -2em!important;
+         
+     }
+ </style>

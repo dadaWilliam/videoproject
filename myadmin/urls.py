@@ -43,4 +43,7 @@ urlpatterns = [
     # -----------------------用户反馈-------------------------
     path('feedback_list/', views.FeedbackListView.as_view(), name='feedback_list'),
     path('feedback_delete/', views.feedback_delete, name='feedback_delete'),
+
+    # 自动通知用户
+    path('advertising/', views.advertising, name='advertising'),
 ]

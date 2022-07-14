@@ -141,6 +141,9 @@ var video_id = {{ video.id }}
 <script src="{% static 'js/load_comments.js' %}"></script>
 <script src="{% static 'js/detail.js' %}"></script>
 
+<script type="text/javascript">
+    watermark({"watermark_txt":" {{user.username}} "});
+</script>
 
 {% endblock javascript %}
 
