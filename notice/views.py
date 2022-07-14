@@ -30,9 +30,9 @@ class NoticeListView(LoginRequiredMixin, ListView):
         context['page_list'] = page_list
         return context
 
-    # 未读通知的查询集
+    # 未读+已读通知的查询集
     def get_queryset(self):
-        return self.request.user.notifications.unread()
+        return self.request.user.notifications.unread() | self.request.user.notifications.read()
 
 
 class NoticeUpdateView(View):

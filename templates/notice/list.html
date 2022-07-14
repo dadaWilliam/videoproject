@@ -7,13 +7,13 @@
 {% block content %}
 
 <div class="main">
-    <h3 class="ui header">消息通知     <a class="ui mini red button" href="{% url 'notice:update' %}" style="float:right;">清空所有</a>
+    <h3 class="ui header">消息通知     <a class="ui teal label">未读在前，已读在后</a><a class="ui mini red button" href="{% url 'notice:update' %}" style="float:right;">全部已读</a>
     </h3>
 
     <div class="ui unstackable items">
         {% for notice in notices %}
         <div class="item">
-            
+            {% if notice.unread %}
             <div class="ui tiny image">
                 {% thumbnail notice.target.cover "300x200" crop="center" as im %}
                 <img class="ui image" src="{{ im.url }}">
@@ -34,6 +34,30 @@
                     {{ notice.timestamp|date:"Y/m/d H:i" }}
                 </div>
             </div>
+            {% else %}
+            <div class="ui tiny image">
+                {% thumbnail notice.target.cover "300x200" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}">
+                {% empty %}
+                {% endthumbnail %}
+            </div>
+            <div class="middle aligned content"> 
+                <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" style="color: grey;">
+                     已完成{% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %} {{ notice.verb }}的
+                     <p>{{ notice.target.title }}</p>
+                    </a>
+                <span style="float:right;">
+                    <a class="ui icon tiny orange button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="trophy icon"></i>
+                    </a>
+                </span>
+                <div>
+                    {{ notice.timestamp|date:"Y/m/d H:i" }}
+                </div>
+            </div>
+            {% endif %}
+
+
+
        </div>
         {% empty %}
            <h3>暂无通知</h3>

@@ -157,7 +157,7 @@ USE_TZ = False
 STATIC_URL = '/static/'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #collect_static path
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') #collect_static path, must be static
 #设置图片等静态文件的路径
 STATICFILES_DIRS = (
     ('css',os.path.join(STATIC_ROOT,'css').replace('\\','/') ),
