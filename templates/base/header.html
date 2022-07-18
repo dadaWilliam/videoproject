@@ -6,8 +6,9 @@
 
 <link rel="stylesheet" href="{% static 'css/notification-top-bar.css' %}">
 
-    <div class="notification-top-bar-container" style="height:40px;">
-        <div class="notification-top-bar">
+    <div class="notification-top-bar-container" style="height:40px; ">
+        <p style="text-align: center; padding-top: 10px;">学霸空间顶部通知栏</p>
+        <div class="notification-top-bar" style="display: none;">
             <p></p>
         </div>
     </div>
@@ -20,7 +21,7 @@
             get_latest_system_notification(url);
         })
     </script>
-<div class="ui flex menu" style="margin-top: 0; display: none;">
+<div class="ui menu" style="margin-top: 0;">
     <div class="ui container">
         <a href="/" class="borderless header item">
             <img class="logo" src="{% static 'img/logo.png' %}">

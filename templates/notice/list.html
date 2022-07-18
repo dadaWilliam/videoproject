@@ -5,9 +5,19 @@
 {% load video_tag %}
 
 {% block content %}
-
+<!-- 引入notifications的模板标签 -->
+{% load notifications_tags %}
+{% notifications_unread as unread_count %}
 <div class="main">
-    <h3 class="ui header">消息通知     <a class="ui teal label">未读在前，已读在后</a><a class="ui mini red button" href="{% url 'notice:update' %}" style="float:right;">全部已读</a>
+    
+    <h3 class="ui header">消息通知
+        {% if unread_count %}                                  
+        <a class="ui tiny red label">{{ unread_count }}</a>
+        <a class="ui mini red button" href="{% url 'notice:update' %}" style="float:right ;">全部已读</a>
+        {% else %}
+        <a class="ui green label">暂无</a>
+        {% endif %}
+        <a class="ui teal label">按照时间排序</a>
     </h3>
 
     <div class="ui unstackable items">

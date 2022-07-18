@@ -46,7 +46,7 @@
         $(".loading-div").hide();
         $('body').css('overflow','scroll');
         $('.main').fadeIn(500); 
-        $('.footer').fadeIn(500); 
+        $('.page_nav').fadeIn(500);
     }
   }
 </script>
@@ -69,12 +69,12 @@
 
     <div class="ui orange message " >
         <i class="close icon"></i>
-        <div class="header">
-            <p>
-                学霸空间
-            </p>
+        <div class="header" style="text-align: center;">
+            <h>
+                <a class="ui teal label">学霸空间</a>
+            </h>
         </div>
-        <p>欢迎 <a class="ui orange label">{{user.username}}</a> 来到 🏫 <a class="ui teal label">学霸空间</a>!</p>
+        <p style="text-align: center;">欢迎 <span style="color: brown ;">{{user.username}}</span> 来到学霸空间！</p>
         <!-- <p><a class="ui red label">新功能</a> 点赞👍, 收藏😍, 历史记录🤔</p>
         <p><a class="ui blue label">新布局</a> 首页布局已优化</p> -->
         <!-- <p>🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
@@ -136,7 +136,7 @@
     {% endfor %}
 </div>
 </div>
-<div class="footer">
+<div class="page_nav">
     {% include "base/page_nav.html" %}
 </div>
 {% endblock content %}
