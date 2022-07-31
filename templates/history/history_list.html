@@ -9,33 +9,32 @@
 <div class="main">
     <h3 class="ui header">历史记录</h3>
     <div class="ui unstackable items">
-        {% for history in history_list %}
+        {% for history in history_list %}  
         <div class="item">
-            <div class="ui tiny image">
-                {% thumbnail history.content_object.cover "300x200" crop="center" as im %}
-                <img class="ui image" src="{{ im.url }}">
-                {% empty %}
-                {% endthumbnail %}
-            </div>
-            <div class="middle aligned content"> 
-                <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
-                <span style="float:right;">
-                    <a class="ui icon tiny red button " href="{% url 'history_delete' history.pk  %}" ><i class="trash alternate outline icon"></i></a>
-                </span>
-                <div>
-                    <span> {{ history.viewed_on|naturaltime }} </span>
+                <div class="ui tiny image">
+                    {% thumbnail history.content_object.cover "300x200" crop="center" as im %}
+                    <img class="ui image" src="{{ im.url }}">
+                    {% empty %}
+                    {% endthumbnail %}
                 </div>
-            </div>
-            
-            
+                <div class="middle aligned content">
+                    {% if history.content_object.pk %} 
+                        <a class="header" href="{% url 'video:detail' history.content_object.pk %}">{{ history.content_object.title }}</a>
+                        <span style="float:right;">
+                            <a class="ui icon tiny red button " href="{% url 'history_delete' history.pk  %}" ><i class="trash alternate outline icon"></i></a>
+                        </span>
+                        <div>
+                            <span> {{ history.viewed_on|naturaltime }} </span>
+                        </div>
+                    {% else %}            
+                        <h4>“你似乎来到了没有知识存在的荒原...”</h4>
+                        <a class="ui tiny pink button " href="{% url 'history_delete' history.pk  %}" ><i class="trash alternate outline icon"></i>此视频不见啦</a>
+                    {% endif %}
+                </div> 
         </div>
-       
         {% empty %}
            <h3>暂无数据</h3>
-        {% endfor %}
-        
-        
-        
+        {% endfor %} 
     </div>
 </div>
 

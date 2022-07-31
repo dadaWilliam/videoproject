@@ -1,6 +1,7 @@
 from django.http import Http404
 from video.models import Video
 from django.utils.deprecation import MiddlewareMixin
+from django.shortcuts import render
 
 class BlockInvalidVideoMiddleware(MiddlewareMixin):
     def process_request(self, request):
@@ -8,7 +9,7 @@ class BlockInvalidVideoMiddleware(MiddlewareMixin):
         if invalid_videos:
             for invalid_video in invalid_videos:
                 if request.path == '/video/detail/' + str(invalid_video['id']) +'/':
-                    raise Http404()
+                    return render(request, 'editing.html', {'msg': "视频正在修改中..."})
                 else:
                     pass
         pass

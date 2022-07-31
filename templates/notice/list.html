@@ -31,17 +31,22 @@
                 {% endthumbnail %}
             </div>
             <div class="middle aligned content"> 
-                <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" >
-                    {% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %}
-                    {{ notice.verb }}
-                     <p>{{ notice.target.title }}</p>
-                    
-                    </a>
-                <span style="float:right;">
-                    <a class="ui icon tiny blue button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="eye icon"></i></a>
-                </span>
+                {% if notice.target %}
+                    <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" >
+                        {% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %}
+                        {{ notice.verb }}
+                        <p>{{ notice.target.title }}</p>
+                        
+                        </a>
+                    <span style="float:right;">
+                        <a class="ui icon tiny blue button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="eye icon"></i></a>
+                    </span>
+                {% else %}
+                    <h4>“你似乎来到了没有知识存在的荒原...”</h4>
+                    <a class="ui tiny pink button " href="#" ><i class="trash alternate outline icon"></i>此视频不见啦</a>
+                {% endif %}
                 <div>
-                    {{ notice.timestamp|date:"Y/m/d H:i" }}
+                    {{ notice.timestamp|naturaltime }}
                 </div>
             </div>
             {% else %}
@@ -52,17 +57,22 @@
                 {% endthumbnail %}
             </div>
             <div class="middle aligned content"> 
-                <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" style="color: grey;">
-                     已完成{% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %} {{ notice.verb }}的
-                     <p>{{ notice.target.title }}</p>
-                    </a>
-                <span style="float:right;">
-                    <a class="ui icon tiny orange button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="trophy icon"></i>
-                    </a>
-                </span>
-                <div>
-                    {{ notice.timestamp|date:"Y/m/d H:i" }}
-                </div>
+                {% if notice.target %}
+                    <a class="header" href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" style="color: grey;">
+                        已完成{% if user.is_superuser %} {{ notice.actor }} {% else %} 管理员 {% endif %} {{ notice.verb }}的
+                        <p>{{ notice.target.title }}</p>
+                        </a>
+                    <span style="float:right;">
+                        <a class="ui icon tiny orange button " href="{% url 'notice:update' %}?video_id={{ notice.target.id }}&notice_id={{ notice.id }}" ><i class="trophy icon"></i>
+                        </a>
+                    </span>
+                    <div>
+                        {{ notice.timestamp|date:"Y/m/d H:i" }}
+                    </div>
+                {% else %}
+                    <h4>“你似乎来到了没有知识存在的荒原...”</h4>
+                    <a class="ui tiny pink button " href="#" ><i class="eye slash icon"></i>此视频不见啦</a>
+                {% endif %}
             </div>
             {% endif %}
 
