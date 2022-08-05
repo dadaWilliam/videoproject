@@ -1,3 +1,42 @@
+var times = 0;
+var random = Math.round(Math.random()*10)+1;
+document.getElementById("random").innerHTML=""+random+"次";
+$('.verification-delete').click(function(){
+        times+=1;
+        if(times==random){
+            $('.ui.tiny.modal.verification')
+            .modal({
+            closable  : true,
+            onDeny    : function(){
+                return true;
+            },
+            onApprove : function() {
+                document.getElementById("button").removeAttribute("disabled");
+            },
+            })
+            .modal('show');
+        }
+        
+});
+
+$('.agreement-show').click(function(){
+     
+    $('.ui.basic.modal.agreement')
+    .modal({
+      closable  : true,
+      onDeny    : function(){
+        document.getElementById("agreement").checked = false;
+        return true;
+      },
+      onApprove : function() {
+        document.getElementById("agreement").checked = true;
+        return true;
+      },
+    })
+    .modal('show');
+});
+
+
 //$(document)
 //    .ready(function() {
 //      $('.ui.form')
