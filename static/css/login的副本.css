@@ -1,0 +1,76 @@
+body{
+    height: 100vh;
+    /* 弹性布局 居中显示 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 渐变背景 */
+    background: #e6e5df;
+    /* 溢出隐藏 */
+    overflow: hidden;
+}
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
+    overflow: hidden;
+    text-align: center;
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+#slider {
+    margin: 10px auto;
+    width: 300px;
+    height: 40px;
+    position: relative;
+    border-radius: 2px;
+    background-color: #dae2d0;
+    overflow: hidden;
+    text-align: center;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    }
+
+    #slider_bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background-color: #7AC23C;
+    z-index: 1;
+    }
+
+    #label {
+    width: 46px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 38px;
+    line-height: 38px;
+    border: 1px solid #cccccc;
+    background: #fff;
+    z-index: 3;
+    cursor: move;
+    color: #ff9e77;
+    font-size: 16px;
+    font-weight: 900;
+    }
+
+    #labelTip {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 13px;
+    font-family: 'Microsoft Yahei', serif;
+    color: #787878;
+    line-height: 38px;
+    text-align: center;
+    z-index: 2;
+    }

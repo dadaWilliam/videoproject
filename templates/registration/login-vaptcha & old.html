@@ -1,0 +1,231 @@
+{% load static %}<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,  user-scalable=no">
+    <meta name="referrer" content="always">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.custom.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+</head>
+<body id="v-account-body" >
+<div class="ui middle aligned center aligned grid">
+    <div class="column v-account">
+        <h2 class="ui teal image header">
+            <img src="{% static 'img/logo.png' %}" class="image">
+            <div class="content">
+                登录账户
+            </div>
+        </h2>
+        <script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+        <script src="https://v-cn.vaptcha.com/v3.js"></script>
+        <form class="ui large form" novalidate method="post" action="{% url 'users:login' %}"
+              enctype="multipart/form-data" onsubmit="return check();">
+            {% csrf_token %}
+            <div class="ui stacked segment">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        {{form.username}}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        {{form.password}}
+                    </div>
+                </div>
+                <style>
+                    .VAPTCHA-init-main {
+                        display: table;
+                        width: 100%;
+                        height: 100%;
+                        background-color: #eeeeee;
+                    }
+            
+                    .VAPTCHA-init-loading {
+                        display: table-cell;
+                        vertical-align: middle;
+                        text-align: center;
+                    }
+            
+                    .VAPTCHA-init-loading>a {
+                        display: inline-block;
+                        width: 18px;
+                        height: 18px;
+                        border: none;
+                    }
+            
+                    .VAPTCHA-init-loading .VAPTCHA-text {
+                        font-family: sans-serif;
+                        font-size: 12px;
+                        color: #cccccc;
+                        vertical-align: middle;
+                    }
+                </style>
+                <div class="field">
+                    <!-- <div id="slider">
+                        <div id="slider_bg"></div>
+                        <span id="label"><i class="angle double right icon"></i></span> <span id="labelTip">请拖动滑块解锁</span> 
+                    </div> -->
+                    <!-- 点击式按钮建议高度介于36px与46px  -->
+                    <div id="VAPTCHAContainer" style="width: 300px;height: 36px;">
+                        <!-- 下面代码为预加载动画代码，仅供参考 -->
+                        <div class="VAPTCHA-init-main">
+                            <div class="VAPTCHA-init-loading">
+                                <a href="/" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="48px"
+                                        height="60px" viewBox="0 0 24 30"
+                                        style="enable-background: new 0 0 50 50; width: 14px; height: 14px; vertical-align: middle"
+                                        xml:space="preserve">
+                                        <rect x="0" y="9.22656" width="4" height="12.5469" fill="#CCCCCC">
+                                            <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                            <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                        </rect>
+                                        <rect x="10" y="5.22656" width="4" height="20.5469" fill="#CCCCCC">
+                                            <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.15s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                            <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.15s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                        </rect>
+                                        <rect x="20" y="8.77344" width="4" height="13.4531" fill="#CCCCCC">
+                                            <animate attributeName="height" attributeType="XML" values="5;21;5" begin="0.3s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                            <animate attributeName="y" attributeType="XML" values="13; 5; 13" begin="0.3s" dur="0.6s"
+                                                repeatCount="indefinite"></animate>
+                                        </rect>
+                                    </svg>
+                                </a>
+                                <span class="VAPTCHA-text">验证码加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function check(){
+                            if ($("#agreement").is(':checked')){     
+                                return true;
+                                }
+                            else{
+                                alert("请阅读并同意《管理条例》和《隐私政策》！");
+                                return false;
+                                }
+                        }
+                    vaptcha({
+                        vid: '62ec95724ed991eb6e61aef9',
+                        mode: 'click',
+                        scene: 1,
+                        container: '#VAPTCHAContainer',
+                        area: 'auto',
+                        lang: 'zh-CN',
+                        style: 'dark',
+                    }).then(function (VAPTCHAObj) {
+                        // 将VAPTCHA验证实例保存到局部变量中
+                        obj = VAPTCHAObj;
+            
+                        // 渲染验证组件
+                        VAPTCHAObj.render();
+            
+                        // 验证成功进行后续操作
+                        VAPTCHAObj.listen('pass', function () {
+                            serverToken = VAPTCHAObj.getServerToken();
+                            var data = {
+                                server: serverToken.server,
+                                token: serverToken.token,
+                            }
+                            if (data.token === '') {
+                                alert('请进行人机验证')
+                                // 账号或密码错误等原因导致登录失败，重置人机验证
+                                VAPTCHAObj.reset()
+                            } else {
+                                if ($("#agreement").is(':checked')){
+                                        
+                                        document.getElementById("button").removeAttribute("disabled");
+                                    }
+                                else{
+                                        alert("请阅读并同意《管理条例》和《隐私政策》后重新验证！");
+                                        VAPTCHAObj.reset()
+                                    }
+
+                            }
+            
+                           
+                        })
+                    })
+                </script>
+
+                <input type="hidden" name="next" value="{{ next }}"/>
+                <div class="field">
+                    <button class="ui fluid large teal submit button" type="submit" id="button" disabled >登录</button>
+                </div>
+                
+                <div class="field" style="text-align: left; ">
+                    <div class="ui checked checkbox">
+                    <input type="checkbox" checked="" id="agreement">
+                    <label>已阅读并同意<a class="agreement-show">《管理条例》</a>和<a class="agreement-show">《隐私政策》</a></label>
+                    </div>
+                </div>
+
+                <!-- <script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+
+                        <script src="{% static 'js/slideunlock.js' %}"></script> 
+                        <script>
+                            $(function () {
+                                var slider = new SliderUnlock("#slider",{
+                                    successLabelTip : "解锁成功"    
+                                },function(){
+                                    
+                                    if ($("#agreement").is(':checked')){
+                                        
+                                        document.getElementById("label").innerHTML="<i class='check icon'></i>"
+                                        document.getElementById("button").removeAttribute("disabled");
+                                    }
+                                    else{
+                                        alert("请阅读并同意《管理条例》和《隐私政策》后重试！");
+                                        
+                                        slider.init();
+                                        document.getElementById("labelTip").innerHTML="请同意协议后重试!"
+                                    }
+                                });
+                            slider.init();
+                        });
+                        function check(){
+                            
+                            if ($("#agreement").is(':checked')){     
+                                return true;
+                                }
+                            else{
+                                    alert("请阅读并同意《管理条例》和《隐私政策》！再重新登陆");
+                                    return false;      
+                                    }  
+                        }   
+                        </script> -->
+
+            </div>
+            {% include "base/form_errors.html" %}
+            {% include "base/form_messages.html" %}
+        </form>
+        
+        <div class="ui message">
+            <div> 无法通过人机验证？
+                <a class=" mini ui blue button verification-delete">
+                    <i class="lock open icon"></i>点我<span id="random"></span>
+                </a>
+            </div>
+            <div>  
+                <i class="copyright outline icon"></i>学霸空间 
+            </div>        
+            <!-- <div>没有账号？<a href="{% url 'users:signup' %}">注册(暂不开放）</a></div> -->
+        </div>
+    </div>
+</div>
+{% include "registration/login_modal.html" %}
+<script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
+<script src="{% static 'js/login.js' %}"></script>
+
+</body>
+</html>

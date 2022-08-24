@@ -2,7 +2,6 @@
 {% if form.errors %}
 <div class="ui info message">
     <ul class="list">
-
         {% for field in form %}
         {% for error in field.errors %}
         <li class="item">{{ error|escape }}</li>
