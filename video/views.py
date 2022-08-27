@@ -40,13 +40,25 @@ class ClassificationViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAdminUserOrReadOnly]
 
 class VideoViewSet(viewsets.ModelViewSet):
-    queryset = Video.objects.all()
+    queryset = Video.objects.filter(status=0).order_by('-create_time')
     serializer_class = VideoSerializer
     permission_classes = (IsAuthenticated,)
     # permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
     search_fields = ['title']
+
+class VideoIndexShowViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.get_index_show()
+    serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
+
+class VideoRecommendViewSet(viewsets.ModelViewSet):
+    queryset = Video.objects.get_recommend_list()
+    serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
+
+
 #login token
 def generate_token(username):
     """根据用户名和时间，进行MD5值"""

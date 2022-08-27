@@ -21,6 +21,15 @@
                     {{ form.title }}
                 </div>
                 <div class="field">
+                    <label>视频上传时间</label>
+                    {{ video.create_time }}
+                </div>
+                <div class="field">
+                    <label>视频路径</label>
+                    {{ video.file }}
+                </div>
+                
+                <div class="field">
                     <label>视频描述</label>
                     {{ form.desc }}
                 </div>
@@ -50,7 +59,21 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="field">
+                    <label>视频观看次数</label>
+                    {{ form.view_count }}
+                </div>
+                <div class="field">
+                    <label>视频APP首页显示</label>
+                    <div style="margin-bottom: 10px;">
+                        {% if video.index_show %}
+                        <a class="ui teal label">显示在APP首页轮播：序号{{ video.index_show }}</a>
+                        {% else %}
+                        <a class="ui red label"> 不显示在APP首页轮播中</a>
+                        {% endif %}
+                    </div>
+                    {{ form.index_show }}
+                </div>
                 <div class="field">
                     <label>视频封面</label>
                     {% thumbnail video.cover "300x200" crop="center" as im %}
@@ -66,6 +89,8 @@
                         <span id="file_is_choose" class="n">文件已选择</span>
                     </div>
                 </div>
+                
+                
                 <button class="ui primary button" type="submit">保存</button>
 
                 {% include "base/form_errors.html" %}

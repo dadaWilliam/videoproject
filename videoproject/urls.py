@@ -28,7 +28,10 @@ from rest_framework.documentation import include_docs_urls
 import notifications.urls
 
 router = DefaultRouter()
-router.register(r'video', views.VideoViewSet)
+router.register(r'video-index-show', views.VideoIndexShowViewSet,basename='video-index-show')
+router.register(r'video-recommend', views.VideoRecommendViewSet,basename='video-recommend')
+router.register(r'video', views.VideoViewSet, basename='video')
+
 router.register(r'classification', views.ClassificationViewSet)
 router.register(r'user', views.UserViewSet)
 #jwt 验证

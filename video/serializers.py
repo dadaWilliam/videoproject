@@ -34,4 +34,5 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Video
-        fields = '__all__'
+        exclude = ['index_show',]
+        #fields = '__all__'

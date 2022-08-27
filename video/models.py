@@ -29,6 +29,9 @@ class VideoQuerySet(models.query.QuerySet):
     def get_recommend_list(self):
         return self.filter(status=0).order_by('-view_count')[:4]
 
+    def get_index_show(self):
+        return self.filter(status=0).exclude(index_show=0).order_by('index_show')
+
 
 class Classification(models.Model):
     list_display = ("title",)
@@ -47,6 +50,7 @@ class Video(models.Model):
         ('0', '发布中'),
         ('1', '未发布'),
     )
+
     title = models.CharField(max_length=100,blank=True, null=True)
     desc = models.CharField(max_length=255,blank=True, null=True)
     classification = models.ForeignKey(Classification, on_delete=models.CASCADE, null=True,)
@@ -54,6 +58,7 @@ class Video(models.Model):
     cover = models.ImageField(upload_to='cover/',blank=True, null=True)
     status = models.CharField(max_length=1 ,choices=STATUS_CHOICES, blank=True, null=True)
     view_count = models.IntegerField(default=0, blank=True)
+    index_show = models.IntegerField(default=0, blank=True)
     liked = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    blank=True, related_name="liked_videos")
     collected = models.ManyToManyField(settings.AUTH_USER_MODEL,

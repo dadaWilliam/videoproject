@@ -14,6 +14,8 @@ $('.verification-delete').click(function(){
                     return true;
                 },
                 onApprove : function() {
+                    document.getElementById('unlocked').style.display = "block";
+                    document.getElementById('locked').style.display = "none";
                     document.getElementById("button").removeAttribute("disabled");
                 },
                 })

@@ -85,14 +85,19 @@ class VideoEditForm(forms.ModelForm):
 
     status = forms.CharField(min_length=1,max_length=1,required=False,
                              widget=forms.HiddenInput())
-
+    view_count = forms.IntegerField(required=True, error_messages={
+                                 'required': '观看次数不能为空'
+                             },)
+    index_show = forms.IntegerField(required=True, error_messages={
+        'required': '首页显示不能为空'
+    }, )
     # classification = forms.ModelChoiceField(queryset=Classification.objects.all())
     # classification = forms.CharField(min_length=1,max_length=1,required=False,
     #                          widget=forms.HiddenInput())
 
     class Meta:
         model = Video
-        fields = ['title', 'desc', 'status', 'cover','classification']
+        fields = ['title', 'desc', 'status', 'cover','classification','view_count','index_show',]
 
 
 
