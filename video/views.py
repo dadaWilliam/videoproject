@@ -46,7 +46,7 @@ class VideoViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title']
+    search_fields = ['title',]
 
 class VideoIndexShowViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.get_index_show()
@@ -74,6 +74,7 @@ class AuthView(APIView):
     def post(self, request, *args, **kwargs):
         res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
                'msg': 'OK',   # 错误信息
+               'user': None,
                'create_time': datetime.now(),
                'token': None}
 
@@ -92,10 +93,12 @@ class AuthView(APIView):
                     token = generate_token(username)
 
                     Token.objects.update_or_create(user=user_obj, defaults={'token': token, })
+                    res['user'] = user_obj.id
                     res['token'] = token
             else:#永久有效用户
                 token = generate_token(username)
                 Token.objects.update_or_create(user=user_obj, defaults={'token': token})
+                res['user'] = user_obj.id
                 res['token'] = token
         else:
             res['code'] = 1001
@@ -104,8 +107,6 @@ class AuthView(APIView):
         return JsonResponse(res)
 
 ###
-
-
 
 class IndexView(generic.ListView):
     model = Video
