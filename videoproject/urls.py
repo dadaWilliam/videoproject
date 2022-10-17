@@ -48,7 +48,7 @@ urlpatterns = [
     path('video/',include('video.urls')),
     path('comment/',include('comment.urls')),
     path('history/',include('history.urls')),
-    path('download/', views.download, name='download'),
+    path('maintenance/', views.maintenance, name='maintenance'),
     path('', views.IndexView.as_view(), name='home'), # 默认首页
 
     path('docs/', include_docs_urls(title='说明文档')),

@@ -384,5 +384,5 @@ def api_notice_update(request, code):
                 request.user.notifications.mark_all_as_read()
                 return JsonResponse({"code": 2001, "msg": 'read all'})
 
-def download(request):
-    return render(request, '404.html');
+def maintenance(request):
+    return render(request, 'maintenance.html' );
