@@ -34,6 +34,7 @@ router.register(r'video', views.VideoViewSet, basename='video')
 
 router.register(r'classification', views.ClassificationViewSet)
 router.register(r'user', views.UserViewSet)
+router.register(r'video-history', views.HistoryViewSet,basename='video-history')
 #jwt 验证
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -47,6 +48,7 @@ urlpatterns = [
     path('video/',include('video.urls')),
     path('comment/',include('comment.urls')),
     path('history/',include('history.urls')),
+    path('download/', views.download, name='download'),
     path('', views.IndexView.as_view(), name='home'), # 默认首页
 
     path('docs/', include_docs_urls(title='说明文档')),
@@ -56,6 +58,13 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     # drf 注册路由
     path('api/', include(router.urls)),
+    path('api/video-like/<int:code>', views.api_like, name='api-like'),
+    path('api/video-collect/<int:code>', views.api_collect, name='api-collect'),
+    path('api/video-view/<int:code>', views.api_video_view, name='api-view'),
+    path('api/collected-video/<int:user_id>', views.VideoCollectedViewSet.as_view()),
+    path('api/liked-video/<int:user_id>', views.VideoLikedViewSet.as_view()),
+    path('api/update-notice/<int:code>', views.api_notice_update),
+    path('api/notification/<int:code>/<int:user_id>', views.NotificationViewSet.as_view()),
     # notice
     path('notice/', include('notice.urls', namespace='notice')),
     # 通知

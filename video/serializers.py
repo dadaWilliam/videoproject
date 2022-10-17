@@ -1,6 +1,8 @@
+from notifications.models import Notification
 from rest_framework import serializers
 from .models import Video, Classification
 from users.models import User
+from history.models import History
 
 class VideoInfoSerializer(serializers.ModelSerializer):
     """于分类列表中引用的嵌套序列化器"""
@@ -44,14 +46,29 @@ class ClassificationLessSerializer(serializers.ModelSerializer):
         model = Classification
         fields = '__all__'
 
+class HistorySerializer(serializers.ModelSerializer):
+    # """分类的序列化器"""
+    #url = serializers.HyperlinkedIdentityField(view_name='history-detail')
+    class Meta:
+        model = History
+        #exclude = ['content_object',]
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    # """分类的序列化器"""
+    #url = serializers.HyperlinkedIdentityField(view_name='history-detail')
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
 
 class VideoSerializer(serializers.HyperlinkedModelSerializer):
     """视频的序列化器"""
     # classification 的嵌套序列化字段
     classification = ClassificationLessSerializer(read_only=True)
-    # classification 的 id 字段，用于创建/更新 category 外键
+    # # classification 的 id 字段，用于创建/更新 category 外键
     classification_id = serializers.IntegerField(write_only=True, allow_null=True, required=False)
-    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+    #create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
 
     # category_id 字段的验证器
     def validate_classification_id(self, value):
@@ -64,6 +81,7 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
         model = Video
         exclude = ['index_show',]
         #fields = '__all__'
+
 
 
 

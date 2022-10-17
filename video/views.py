@@ -3,23 +3,31 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
+from requests import Response
+
+
 from video.serializers import *
 
 from helpers import get_page_list, ajax_required
 from .forms import CommentForm
 from .models import Video, Classification
+from history.models import History
 from users.models import User,Token
 
 from video.permissions import IsAdminUserOrReadOnly
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework import filters
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from django.contrib.auth import authenticate
+
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes
 
 from datetime import datetime, timedelta
 from history.mixins import ObjectViewMixin
-
+import json
+from django.contrib.contenttypes.models import ContentType
 
 def page_not_found(request, exception):
     return render(request, "404.html",)
@@ -46,18 +54,68 @@ class VideoViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title',]
+    search_fields = ['title','classification__title']
 
 class VideoIndexShowViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.get_index_show()
     serializer_class = VideoSerializer
     permission_classes = (IsAuthenticated,)
 
+class VideoCollectedViewSet(generics.ListCreateAPIView):
+    serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        user = get_object_or_404(User, pk=self.kwargs.get('user_id'))
+        # print(self.kwargs.get('video_id'))
+        videos = user.collected_videos.all()
+        return videos
+
+class VideoLikedViewSet(generics.ListCreateAPIView):
+    serializer_class = VideoSerializer
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        user = get_object_or_404(User, pk=self.kwargs.get('user_id'))
+        # print(self.kwargs.get('video_id'))
+        videos = user.collected_videos.all()
+        return videos
+
 class VideoRecommendViewSet(viewsets.ModelViewSet):
     queryset = Video.objects.get_recommend_list()
     serializer_class = VideoSerializer
     permission_classes = (IsAuthenticated,)
 
+class HistoryViewSet(viewsets.ModelViewSet):
+    queryset = History.objects.all().order_by('-viewed_on')
+    serializer_class = HistorySerializer
+    permission_classes = (IsAuthenticated,)
+    # permission_classes = [IsAdminUserOrReadOnly]
+
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['user__id',]
+
+class NotificationViewSet(generics.ListCreateAPIView):
+    serializer_class = NotificationSerializer
+    permission_classes = (IsAuthenticated,)
+    def get_queryset(self):
+        user = get_object_or_404(User, pk=self.kwargs.get('user_id'))
+        code = self.kwargs.get('code')
+        # print(self.kwargs.get('video_id'))
+        if code == 0:
+            notifications = Notification.objects.filter(recipient=user,unread=True)
+        elif code == 1:
+            notifications = Notification.objects.filter(recipient=user, unread=False)
+        else:
+            notifications = Notification.objects.filter(recipient=user,)
+        return notifications
+
+# class NotificationViewSet(viewsets.ModelViewSet):
+#     queryset = Notification.objects.all()
+#     serializer_class = NotificationSerializer
+#     permission_classes = (IsAuthenticated,)
+#     # permission_classes = [IsAdminUserOrReadOnly]
+#
+#     filter_backends = [filters.SearchFilter]
+#     search_fields = ['user__id',]
 
 #login token
 def generate_token(username):
@@ -195,5 +253,136 @@ def collect(request):
     video.switch_collect(user)
     return JsonResponse({"code": 0, "collects": video.count_collecters(), "user_collected": video.user_collected(user)})
 
+@api_view(['POST','GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_like(request,code):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+        if request.method == "POST":
+            #print(request.content_type)
+            # Content-type为application/json时 用下面的方法获取数据
+            if request.content_type.startswith('application/json'):
+                data_json = json.loads(request.body)
+                video_id = data_json.get('video_id')
+            else:
+                video_id = request.POST.get('video_id')
+            #print(video_id)
+        else:
+            video_id = request.query_params.get('video_id')
+        if video_id is None:
+            # print(video_id)
+            return JsonResponse({"code": 2003, })
+        else:
+            video = Video.objects.get(pk=video_id)
+            user = request.user
+            if code == 1:
+                video.switch_like(user)
+                #用户喜欢
+                return JsonResponse({"code": 2001, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
+            else:
+                return JsonResponse({"code": 2000, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
 
+@api_view(['POST','GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_collect(request,code):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+        if request.method == "POST":
+            # print(request.content_type)
+            # Content-type为application/json时 用下面的方法获取数据
+            if request.content_type.startswith('application/json'):
+                data_json = json.loads(request.body)
+                video_id = data_json.get('video_id')
+            else:
+                video_id = request.POST.get('video_id')
+            #print(video_id)
+        else:
+            video_id = request.query_params.get('video_id')
+        if video_id is None:
+            # print(video_id)
+            return JsonResponse({"code": 2003, })
+        else:
+            video = Video.objects.get(pk=video_id)
+            user = request.user
+            if code == 1:
+                video.switch_collect(user)
+                #用户收藏
+                return JsonResponse({"code": 2001, "collects": video.count_collecters(), "user_collected": video.user_collected(user)})
+            else:
+                return JsonResponse({"code": 2000, "collects": video.count_collecters(), "user_collected": video.user_collected(user)})
 
+@api_view(['POST','GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_video_view(request, code):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+        if request.method == "POST":
+            # print(request.content_type)
+            # Content-type为application/json时 用下面的方法获取数据
+            if request.content_type.startswith('application/json'):
+                data_json = json.loads(request.body)
+                video_id = data_json.get('video_id')
+            else:
+                video_id = request.POST.get('video_id')
+            #print(video_id)
+        else:
+            video_id = request.query_params.get('video_id')
+        if video_id is None:
+            # print(video_id)
+            return JsonResponse({"code": 2003, })
+        else:
+            video = Video.objects.get(pk=video_id)
+            if code == 1:
+                new_history = History.objects.update_or_create(
+                    user=request.user,
+                    content_type=ContentType.objects.get_for_model(video),
+                    object_id=video.id,
+                    defaults={'viewed_on': datetime.now()},
+                )
+                # new_history.save()
+                #用户观看
+                return JsonResponse({"code": 2001, "msg": 'history added',})
+            else:
+                video.increase_view_count()
+                #观看次数
+                return JsonResponse({"code": 2000, "msg": 'view count added'})
+
+@api_view(['GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_notice_update(request, code):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+
+        user = get_object_or_404(User, pk=request.user.pk)
+        # if request.method == "POST":
+        #     # print(request.content_type)
+        #     # Content-type为application/json时 用下面的方法获取数据
+        #     if request.content_type.startswith('application/json'):
+        #         data_json = json.loads(request.body)
+        #         notice_id = data_json.get('notice_id')
+        #     else:
+        #         notice_id = request.POST.get('notice_id')
+        # else:
+        notice_id = request.query_params.get('notice_id')
+        if notice_id is None:
+            return JsonResponse({"code": 2003, })
+        else:
+            print(notice_id)
+            if code == 0:
+                # user = get_object_or_404(User, pk=request.user.pk)
+                user.notifications.get(id=notice_id).mark_as_read()
+                return JsonResponse({"code": 2000, "msg": 'read 1'})
+            else:
+                request.user.notifications.mark_all_as_read()
+                return JsonResponse({"code": 2001, "msg": 'read all'})
+
+def download(request):
+    return render(request, '404.html');

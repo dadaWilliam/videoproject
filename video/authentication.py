@@ -2,11 +2,22 @@
 from rest_framework.authentication import BaseAuthentication
 from rest_framework import exceptions
 from datetime import datetime, timedelta
+import json
 
 from users.models import Token, User
 class CustomAuthentication(BaseAuthentication):
     def authenticate(self, request):
-        token = request.query_params.get('tk')
+        if request.method == "POST":
+            # Content-type为application/json时 用下面的方法获取数据
+            if request.content_type.startswith('application/json') :
+                data_json = json.loads(request.body)
+                token = data_json.get('tk')
+            else:
+                token = request.POST.get('tk')
+            #print(token)
+        else:
+            token = request.query_params.get('tk')
+
         token_obj = Token.objects.filter(token=token).first()
         #print(token_obj.user)
         user_obj = Token.objects.filter(token=token).values("user__expire")

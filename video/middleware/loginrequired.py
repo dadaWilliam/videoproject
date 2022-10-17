@@ -9,6 +9,7 @@ class LoginRequiredMiddleware:
         self.open_urls = [self.login_url] + getattr(settings, 'OPEN_URLS', [])
 
     def __call__(self, request):
+
         url = request.path_info
         tokens = Token.objects.all()
         key_tk:String = request.GET.get('tk','');
