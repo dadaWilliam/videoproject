@@ -27,6 +27,12 @@ class Repair(models.Model):
     ok = models.BooleanField(default=True)
     ok_time = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
 
+class Software(models.Model):
+    version = models.IntegerField(default=1, blank=True)
+    force = models.BooleanField(default=False)
+    desc = models.CharField(max_length=255, blank=True, null=True)
+    time = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
+
 class Feedback(models.Model):
     contact = models.CharField(blank=True, null=True, max_length=20)
     content = models.CharField(blank=True, null=True, max_length=200)

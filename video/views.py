@@ -12,7 +12,7 @@ from helpers import get_page_list, ajax_required
 from .forms import CommentForm
 from .models import Video, Classification
 from history.models import History
-from users.models import User,Token
+from users.models import User, Token, Repair, Software
 
 from video.permissions import IsAdminUserOrReadOnly
 from rest_framework import viewsets, generics
@@ -383,6 +383,46 @@ def api_notice_update(request, code):
             else:
                 request.user.notifications.mark_all_as_read()
                 return JsonResponse({"code": 2001, "msg": 'read all'})
+
+@api_view(['GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_check(request,):
+
+        # user = get_object_or_404(User, pk=request.user.pk)
+        # if request.method == "POST":
+        #     # print(request.content_type)
+        #     # Content-type为application/json时 用下面的方法获取数据
+        #     if request.content_type.startswith('application/json'):
+        #         data_json = json.loads(request.body)
+        #         notice_id = data_json.get('notice_id')
+        #     else:
+        #         notice_id = request.POST.get('notice_id')
+        # else:
+        try:
+            repair = Repair.objects.all()[0]
+        except:
+            repair = None
+        if repair is not None and repair.ok is False:
+            return JsonResponse({"code": 500, "msg": 'under maintenance'})
+        else:
+            version = request.query_params.get('version')
+            if version is None:
+                return JsonResponse({"code": 403, })
+            else:
+                try:
+                    software = Software.objects.all()[0]
+                except:
+                    software = None
+            if software is not None and software.version > int(version):
+                new_version = software.version
+                desc = software.desc
+                force = software.force
+                time = software.time
+
+                return JsonResponse({"code": 400, "msg": 'need update','new_version':new_version,'desc':desc,'force':force,'time':time})
+            else:
+                return JsonResponse({"code": 200, "msg": 'check ok'})
 
 def maintenance(request):
     return render(request, 'maintenance.html' );

@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.conf import settings
 from users.models import Token,Repair
@@ -22,7 +22,7 @@ class LoginRequiredMiddleware:
             key_tk: str = request.GET.get('tk','');
             #print("key_tk "+key_tk)
 
-            if url.startswith('/static/') or url.startswith('/api/'):
+            if url.startswith('/static/') or url.startswith('/api/') or url == '/api-check/':
                 return self.get_response(request)
             if not request.user.is_authenticated and request.path_info not in self.open_urls:
                 if url.startswith('/upload/'):
@@ -37,9 +37,13 @@ class LoginRequiredMiddleware:
                     return redirect(self.login_url + '?next=' + request.path)
             return self.get_response(request)
         else:
-            if url.startswith('/admin/') or url.startswith('/static/'):
+            if url.startswith('/admin/') or url.startswith('/static/') or url == '/api-check/':
                 return self.get_response(request)
-            elif url.startswith('/api/'):
-                raise Http404('under maintenance')
-            context = {'ok_time': repair.ok_time}
-            return render(request, 'maintenance.html',context);
+
+            else:
+                if repair.ok_time is None:
+                    context = {'ok_time': '待定'}
+                else:
+                    context = {'ok_time': repair.ok_time}
+
+                return render(request, 'maintenance.html',context);

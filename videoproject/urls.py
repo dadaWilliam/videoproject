@@ -56,7 +56,9 @@ urlpatterns = [
     #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include('rest_framework.urls')),
+    path('api-check/', views.api_check, name='api-check'),
     # drf 注册路由
+
     path('api/', include(router.urls)),
     path('api/video-like/<int:code>', views.api_like, name='api-like'),
     path('api/video-collect/<int:code>', views.api_collect, name='api-collect'),
