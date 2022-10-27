@@ -1,11 +1,12 @@
+from urllib import request
+
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
-from requests import Response
 
-
+from django_tctip.models import Tip
 from video.serializers import *
 
 from helpers import get_page_list, ajax_required
@@ -85,6 +86,7 @@ class VideoRecommendViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 class HistoryViewSet(viewsets.ModelViewSet):
+
     queryset = History.objects.all().order_by('-viewed_on')
     serializer_class = HistorySerializer
     permission_classes = (IsAuthenticated,)
@@ -352,6 +354,18 @@ def api_video_view(request, code):
                 video.increase_view_count()
                 #观看次数
                 return JsonResponse({"code": 2000, "msg": 'view count added'})
+
+@api_view(['GET'])
+# @permission_classes((AllowAny, ))
+@csrf_exempt
+def api_notice(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+        tip = Tip.objects.first()
+        return JsonResponse({"code": 2000, "msg": 'ok', 'tip': tip.notice_text})
+
+
 
 @api_view(['GET'])
 # @permission_classes((AllowAny, ))

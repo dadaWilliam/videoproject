@@ -66,6 +66,7 @@ urlpatterns = [
     path('api/collected-video/<int:user_id>', views.VideoCollectedViewSet.as_view()),
     path('api/liked-video/<int:user_id>', views.VideoLikedViewSet.as_view()),
     path('api/update-notice/<int:code>', views.api_notice_update),
+    path('api/notice/', views.api_notice),
     path('api/notification/<int:code>/<int:user_id>', views.NotificationViewSet.as_view()),
     # notice
     path('notice/', include('notice.urls', namespace='notice')),
