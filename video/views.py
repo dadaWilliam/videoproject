@@ -93,7 +93,8 @@ class HistoryViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAdminUserOrReadOnly]
 
     filter_backends = [filters.SearchFilter]
-    search_fields = ['user__id',]
+    # filter_fields = ['user__id','id']
+    search_fields = ['=user__id',]
 
 class NotificationViewSet(generics.ListCreateAPIView):
     serializer_class = NotificationSerializer
@@ -440,3 +441,15 @@ def api_check(request,):
 
 def maintenance(request):
     return render(request, 'maintenance.html' );
+
+def download(request):
+    try:
+        software = Software.objects.all()[0]
+    except:
+        software = None
+
+    if software is not None:
+        desc = software.desc.split("*")
+        force = software.force
+        time = software.time
+    return render(request, 'download.html',context={'desc':desc,'force':force,'time':time});

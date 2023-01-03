@@ -10,3 +10,4 @@ coreapi
 django-user-visit
 django-notifications-hq
 django-top-notify
+django-filter

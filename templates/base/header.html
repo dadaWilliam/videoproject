@@ -101,11 +101,12 @@
                         <i class="file alternate icon"></i>
                         <span>API 文档</span>
                     </div>
-                    <div class="item" onclick="window.location='https://user.vaptcha.com/manage';">
-                        <i class="lock icon"></i>
-                        <span>人机验证</span>
-                    </div>
+                    
                     {% endif %}
+                    <div class="item" onclick="window.location='/download';">
+                        <i class="download icon"></i>
+                        <span>下载中心</span>
+                    </div>
                     <div class="item" onclick="window.location='{% url 'users:logout' %}';">
                         <i class="sign-out icon"></i>
                         <span>退出</span>

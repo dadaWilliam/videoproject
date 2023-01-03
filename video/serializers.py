@@ -59,7 +59,7 @@ class HistorySerializer(serializers.ModelSerializer):
         video = Video.objects.filter(id=obj.object_id, status=0)
         if video is not None and len(video) > 0:
 
-            return VideoSerializer(video, many=True,context=self.context).data
+            return VideoSerializer(video, many=True, context=self.context).data
         else:
             return ""
     class Meta:

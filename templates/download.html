@@ -1,111 +1,96 @@
-<!DOCTYPE html>
+{% extends 'base/base.html' %}
 {% load static %}
-<html>
+{% load thumbnail %}
 
-<head>
-    <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon" /> 
+{% block content %}
 
-    <title>学霸空间 下载</title>
-
-    <meta charset="utf-8" />
-    <meta content="yes" name="apple-mobile-web-app-capable" />
-    <meta content="yes" name="apple-touch-fullscreen" />
-    <meta content="telephone=no,email=no" name="format-detection" />
-    <meta content="maximum-dpr=2" name="flexible" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    
-    
-    
-</head>
-
-<body>
-    <h2>↓学霸空间 下载↓</h2>
-    <div class="bg">
-        <span>学霸空间</span>
-    </div>
-    <h1>欢迎来到<br>艾恩小灰灰的前端世界</h1>
-    <script type="text/javascript">
-        // 获取背景对象
-        const bg=document.querySelector(".bg");
-        // 监听滚轮事件
-        document.addEventListener("scroll",function(){
-            // 获取当前滚轮的位置
-            const scrollY=window.scrollY;
-            if(scrollY!=0){
-                // 滚轮位置不等于0时,修改背景的定位加上滚轮的值
-                bg.style.backgroundPosition="calc(50% + "+scrollY+"px) calc(50% + "+scrollY+"px)";
-            }else{
-                // 否则清空背景的定位
-                bg.style.backgroundPosition="";
-            }
-        })
-    </script>
-</body>
-<style type="text/css">
-    *{
-    /* 初始化 */
-    margin: 0;
-    padding: 0;
+<div class="loading-div">
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在加载中...</p>
+        </div>
+      </div>
+</div>
+<style>
+.main{
+    display: none;
 }
-body{
-    /* 200%窗口高度（两屏窗口的高度） */
-    height: 200vh;
-}
-.bg{
-    /* 背景图片 */
-    background-image:url("{% static 'img/mountain.jpg' %}");
-/*     url("../mountain.jpg");*/
-    /* 对图片进行剪切，保留原始比例 */
-    background-size: cover;
-    /* 设置背景图片的定位 */
-    background-position: 50% 50%;
-    height: 200vh;
-    font-size: 80px; 
-    font-weight: 900;
-    text-align: center;
-    /* 相对定位 */
-    position: relative;
-    /* 以区块内的文字作为裁剪区域向外裁剪，文字的背景即为区块的背景，文字之外的区域都将被裁剪掉 */
-    -webkit-background-clip: text;
-    /* 将文字透明镂空 */
-    -webkit-text-fill-color: transparent;
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
     overflow: hidden;
-    padding-top: 100px;
-}
-.bg::before{
-    content: "";
-    /* 背景图片继承父元素 */
-    background-image: inherit;
-    background-size: cover;
-    background-position: 50% 50%;
-    /* 绝对定位 */
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: -99;
-}
-h2{
-    position: absolute;
-    top: 20px;
-    width: 100%;
     text-align: center;
-    letter-spacing: 8px;
-    color: #fff;
-}
-h1{
-    position: absolute;
-    top: 145vh;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    color: #fff;
-    letter-spacing: 10px;
-    padding: 100px 0;
-    text-align: center;
-    background-color: rgba(0,0,0,0.5);
-}
+    
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
 </style>
-</html>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {    
+        $(".loading-div").hide();
+        $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
+       
+    }
+  }
+</script>
+<div class="main">
+<h3 class="ui header">学霸空间APP 下载</h3>
+
+<div class="ui info message">
+  
+  <div class="header">
+    新版本 {{time}} 
+    {% if force %}
+    <a class="ui red tag label">强制更新</a>
+    {%else%}
+    <a class="ui teal tag label">非强制更新</a>
+    {%endif%}
+  </div>
+  <ul class="list">
+    {% for item in desc %}
+    <li>{{item}}</li>
+    {% empty %}
+    
+    {% endfor %}
+    
+    
+    
+  </ul>
+<p>请注意：安卓已更新，苹果待上架</p>
+</div>
+<div class="ui unstackable items">
+    <button class="ui basic teal button" onclick="window.location='https://edu.iamdada.xyz/static/学霸空间.apk'">
+  <i class="android icon"></i>
+  安卓
+</button>
+<button class="ui basic red button">
+  <i class="apple icon"></i>
+  苹果 
+</button>
+    
+
+</div>
+</div>
+{% include "base/page_nav.html" %}
+
+
+{% endblock content %}
+
+{% block javascript %}
+<script  type="text/javascript" >
+$('.ui .dropdown').dropdown();
+</script>
+{% endblock javascript %}
+
