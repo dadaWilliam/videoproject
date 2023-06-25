@@ -10,6 +10,9 @@ urlpatterns = [
     path('change_password/', views.change_password, name='change_password'),
     path('subscribe/<int:pk>/', views.SubscribeView.as_view(), name='subscribe'),
     path('feedback/', views.FeedbackView.as_view(), name='feedback'),
-    path('<int:pk>/collect_videos/', views.CollectListView.as_view(), name='collect_videos'),
+    path('<int:pk>/collect_videos/',
+         views.CollectListView.as_view(), name='collect_videos'),
     path('<int:pk>/like_videos/', views.LikeListView.as_view(), name='like_videos'),
+    path('qrcode/', views.generate_QRcode, name='generate_QRcode'),
+    path('check-qrcode/', views.check_QRcode, name='check_QRcode'),
 ]

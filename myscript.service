@@ -1,0 +1,16 @@
+[Unit]
+Description=My startup script
+After=network.target
+Wants=network.target
+
+
+[Install]
+WantedBy=multi-user.target
+
+
+[Service]
+Type=simple
+ExecStart=/root/script.sh
+
+[Install]
+WantedBy=multi-user.target

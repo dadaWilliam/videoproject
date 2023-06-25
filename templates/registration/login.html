@@ -31,6 +31,7 @@
         <form class="ui large form" novalidate method="post" action="{% url 'users:login' %}"
               enctype="multipart/form-data" onsubmit="return check();">
             {% csrf_token %}
+             
             <div class="ui unstacked segment">
                 <div class="field">
                     <div class="ui left icon input">
@@ -54,8 +55,9 @@
                 </div>
                 <input type="hidden" name="next" value="{{ next }}"/>
                 <div class="field">
-                    <button class="ui fluid large teal submit button" type="submit" id="button" disabled>登录</button>
+                    <button class="ui fluid large teal submit button" type="submit" id="button" disabled>密码登录</button>
                 </div>
+
                 
                 <div class="field" style="text-align: left; ">
                     <div class="ui checked checkbox">
@@ -63,6 +65,7 @@
                     <label>已阅读并同意<a class="agreement-show">《管理条例》</a>和<a class="agreement-show">《隐私政策》</a></label>
                     </div>
                 </div>
+
 
             </div>
             {% include "base/form_errors.html" %}
@@ -109,14 +112,28 @@
                     </div>
         
         <div class="ui message">
-            <div> 无法通过验证？
+            <div class="field">
+                    <button class="ui fluid large orange scan button" >扫码登录</button>
+                </div>
+        </div>
+        <div class="ui message">
+            
+            <div> 无法验证？
                 <a class=" mini ui red button verification-delete">
                     <i class="user md icon"></i><span id="random">点我试试</span>
                 </a>
             </div>
-            <div>  
+            <div></div>
+          
+            <div>  没有 APP？
+                <a class=" mini ui green button" href="{% url 'download'  %}">
+                   <i class="download md icon"></i>点我下载 
+                </a>
+            </div>
+              <div>  
                 <i class="copyright outline icon"></i>学霸空间 
-            </div>        
+            </div>
+            
             <!-- <div>没有账号？<a href="{% url 'users:signup' %}">注册(暂不开放）</a></div> -->
         </div>
     </div>
@@ -174,7 +191,7 @@
         if ($("#agreement").is(':checked') && document.getElementById('unlocked').style.display == "none"){
             document.getElementsByClassName('sliderModel')[0].style.display = "flex";
             
-            mSlider = new window.mobileSlider(object)
+            mSlider = new window.mobileSlider(object);
         }
         else if(document.getElementById('locked').style.display == "none"){
             alert("已成功解锁，请勿重复验证！");

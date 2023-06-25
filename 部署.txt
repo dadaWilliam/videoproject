@@ -11,3 +11,22 @@ python3 manage.py collectstatic
 python3 manage.py migrate
 
 nohup /home/sites/edu.iamdada.xyz/env/bin/gunicorn  --bind unix:/tmp/edu.iamdada.xyz.socket videoproject.wsgi:application &
+
+nohup /home/sites/edu.iamdada.xyz/env/bin/gunicorn  --bind unix:/tmp/xueba.ca.socket videoproject.wsgi:application &
+
+pstree -ap|grep gunicorn
+
+kill -9 port 
+
+systemctl restart nginx
+
+0 2 * * * /root/script.sh
+
+./script.sh -n
+
+/etc/systemd/system
+
+[Wed 21 Jun 2023 03:45:29 PM UTC] Your cert is in: /root/.acme.sh/xueba.ca_ecc/xueba.ca.cer
+[Wed 21 Jun 2023 03:45:29 PM UTC] Your cert key is in: /root/.acme.sh/xueba.ca_ecc/xueba.ca.key
+[Wed 21 Jun 2023 03:45:29 PM UTC] The intermediate CA cert is in: /root/.acme.sh/xueba.ca_ecc/ca.cer
+[Wed 21 Jun 2023 03:45:29 PM UTC] And the full chain certs is there: /root/.acme.sh/xueba.ca_ecc/fullchain.cer

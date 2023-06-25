@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'video.middleware.blockinvalidvideo.BlockInvalidVideoMiddleware',
 ]
 
-SITE_URL = 'edu.iamdada.xyz'
+SITE_URL = 'xueba.ca'
 
 ROOT_URLCONF = 'videoproject.urls'
 

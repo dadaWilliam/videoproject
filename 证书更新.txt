@@ -1,1 +1,4 @@
 acme.sh  --issue  -d edu.iamdada.xyz  --nginx
+acme.sh  --issue  -d xueba.ca  --nginx
+
+~/.acme.sh/acme.sh --installcert -d xueba.ca --key-file /root/private.key --fullchain-file /root/cert.crt

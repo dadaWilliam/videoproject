@@ -1,5 +1,6 @@
 var times = 0;
 var random = Math.round(Math.random()*10)+4;
+var qrcode 
 
 $('.verification-delete').click(function(){
         if ($("#agreement").is(':checked')){
@@ -78,24 +79,55 @@ $('.agreement-show').click(function(){
             return Math.round(Math.random()*(end-start)+start);
         }
 
+        function checkImageLoad(img) {
+            return new Promise((resolve, reject) => {
+                img.onload = function() {
+                    resolve(true);
+                };
+
+                img.onerror = function() {
+                    reject(new Error('Error loading image'));
+                };
+
+                // Set a timeout to reject the promise if the image doesn't load in a reasonable amount of time
+                setTimeout(() => {
+                    reject(new Error('Image load timed out'));
+                }, 5000); // Wait for 5 seconds
+            });
+        }
+
 
 
         function refresh() {
-            sliderBtn.style.left = sliderBg.style.width = 0;
-            sImgBeginLeft = 0;
-            var ram = Math.random();
-            // var imgIndex = Math.floor(object.imgArr.length * ram);
-            // var imgSrc = object.imgArr[imgIndex];
-            bImg.getElementsByClassName('img')[0].src = sImg.getElementsByClassName('simg')[0].src = 'https://edu.iamdada.xyz/static/img/'+getRandomNumberByRange(0,10)+'.jpg';
-            sImgOver.style.left = Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
-            sImg.style.left = sImgBeginLeft = Math.floor((bImg.offsetWidth / 2 - sImgOver.offsetWidth) * ram) + "px";
-            sImgOver.style.top = sImg.style.top = Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
-            sImg.getElementsByClassName('simg')[0].style.left = -Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
-            sImg.getElementsByClassName('simg')[0].style.top = -Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
-            object.refreshCallback(true)
+           
+                sliderBtn.style.left = sliderBg.style.width = 0;
+                sImgBeginLeft = 0;
+                var ram = Math.random();
+                // var imgIndex = Math.floor(object.imgArr.length * ram);
+                // var imgSrc = object.imgArr[imgIndex];
+
+                bImg.getElementsByClassName('img')[0].src = sImg.getElementsByClassName('simg')[0].src = '/static/img/'+getRandomNumberByRange(0,10)+'.jpg';
+                checkImageLoad(bImg.getElementsByClassName('img')[0]).then(() => {
+                    console.log('Image loaded successfully');
+                    // Continue your touch start function here
+                    sImgOver.style.left = Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
+                    sImg.style.left = sImgBeginLeft = Math.floor((bImg.offsetWidth / 2 - sImgOver.offsetWidth) * ram) + "px";
+                    sImgOver.style.top = sImg.style.top = Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
+                    sImg.getElementsByClassName('simg')[0].style.left = -Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
+                    sImg.getElementsByClassName('simg')[0].style.top = -Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
+                    object.refreshCallback(true);
+                }).catch((error) => {
+                    console.log('Error loading image or image load timed out', error);
+                    // location.reload(); // Refresh the page
+                });
+               
+            
+            
         }
         refresh();
+	
 
+        
         sliderBtn.ontouchstart = function (e) {
             var ev = e || window.event
             var downX = ev.touches[0].pageX;
@@ -173,7 +205,8 @@ $('.agreement-show').click(function(){
 
                 }
             }
-        };
+        
+};
 
 
 
@@ -188,6 +221,73 @@ $('.agreement-show').click(function(){
 
     window.mobileSlider = mobileSlider;
 })()
+
+$(function () {
+    // 写入csrf
+    $.getScript("/static/js/csrftoken.js");
+    $(".scan").click(function(){
+      $.ajax({
+            url: '/users/qrcode/',
+            data: {
+                // video_id: video_id,
+                'csrf_token': csrftoken
+            },
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                var code = data.code
+                qrcode = data.qrcode
+                var elem = document.getElementById("qrcode");
+                elem.src  = qrcode;
+                console.log(qrcode)
+
+                $('.ui.qrcode.modal')
+                .modal({
+                  closable  : true,
+                  onDeny    : function(){
+                    // document.getElementById("agreement").checked = false;
+                    return true;
+                  },
+                  onApprove : function() {
+                    // document.getElementById("agreement").checked = true;
+                    return true;
+                  },
+                })
+
+                .modal('show');
+
+
+                if(code == 0){
+                    var likes = data.likes
+                    var user_liked = data.user_liked
+                    $('#like-count').text(likes)
+                    if(user_liked == 0){
+                        $('#like').removeClass("grey").addClass("red")
+                        $('#like-count').removeClass("grey").addClass("red")
+                    }else{
+                        $('#like').removeClass("red").addClass("grey")
+                        $('#like-count').removeClass("red").addClass("grey")
+                    }
+                }else{
+                    var msg = data.msg
+                    alert(msg)
+                }
+
+            },
+            error: function(data){
+                console.log(data)
+                alert("扫码失败")
+            }
+        });
+    });
+
+
+})
+
+
+
+
+
 
 //$(document)
 //    .ready(function() {

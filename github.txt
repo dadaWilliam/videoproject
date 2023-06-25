@@ -1,0 +1,6 @@
+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
+
+cd videoproject
+git add .
+git commit -m "commit message"
+git push origin master
