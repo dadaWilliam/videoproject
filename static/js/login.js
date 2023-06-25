@@ -54,6 +54,7 @@ $('.agreement-show').click(function(){
             bImg: params.bImg, //大图片的盒子
             sImg: params.sImg, //图片上的小图片
             sImgOver: params.sImgOver, //图片上的占位区域
+            fakeOver: params.fakeOver,
             sliderF: params.sliderF, //滑块的父元素
             sliderBtn: params.sliderBtn, //滑块
             sliderBg: params.sliderBg, //滑块滑动过程中的背景块
@@ -70,6 +71,7 @@ $('.agreement-show').click(function(){
         var sImg = document.getElementById(object.sImg);
         var bImg = document.getElementById(object.bImg);
         var sImgOver = document.getElementById(object.sImgOver);
+        var fakeOver = document.getElementById(object.fakeOver);
         var refreshBtn = document.getElementById(object.refreshBtn);
         var max_left = sliderF.offsetWidth - sliderBtn.offsetWidth;
         var sImgBeginLeft = 0;
@@ -103,6 +105,8 @@ $('.agreement-show').click(function(){
                 sliderBtn.style.left = sliderBg.style.width = 0;
                 sImgBeginLeft = 0;
                 var ram = Math.random();
+                var ram2 = Math.random();
+                var ram3 = Math.random();
                 // var imgIndex = Math.floor(object.imgArr.length * ram);
                 // var imgSrc = object.imgArr[imgIndex];
 
@@ -111,8 +115,14 @@ $('.agreement-show').click(function(){
                     console.log('Image loaded successfully');
                     // Continue your touch start function here
                     sImgOver.style.left = Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
+                    
+                    fakeOver.style.left = Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram2 - sImgOver.offsetWidth - 6) + "px";
+                    
                     sImg.style.left = sImgBeginLeft = Math.floor((bImg.offsetWidth / 2 - sImgOver.offsetWidth) * ram) + "px";
                     sImgOver.style.top = sImg.style.top = Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
+                    
+                    fakeOver.style.top = Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram3 + 10) + "px";
+
                     sImg.getElementsByClassName('simg')[0].style.left = -Math.floor(bImg.offsetWidth / 2 + bImg.offsetWidth / 2 * ram - sImgOver.offsetWidth - 6) + "px";
                     sImg.getElementsByClassName('simg')[0].style.top = -Math.floor((bImg.offsetHeight - sImgOver.offsetWidth - 10) * ram + 10) + "px";
                     object.refreshCallback(true);
