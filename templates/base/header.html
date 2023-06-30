@@ -29,9 +29,12 @@
         </a>
         
         <div class="v-header-extra">
-            <div class="ui small icon input v-video-search" data-tooltip="使用回车进行搜索" data-position="bottom center" ;>
+            <div class="ui  small action input v-video-search" data-tooltip="输入内容搜索" data-position="bottom center" ;>
                 <input class="prompt" value="{{ q }}" type="text" placeholder="搜索" id="v-search"  >
-                <i id="search" class="search icon" style="cursor:pointer;"></i>
+                 <button class="ui icon teal button" id="search">
+                    <i class="search icon"></i>
+                  </button>
+                <!-- <button id="search" class="search icon" style="cursor:pointer;"></button> -->
             </div>
             {% if user.is_authenticated %}
             <div class="ui inline dropdown" id="v-header-avatar" >

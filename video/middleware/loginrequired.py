@@ -16,6 +16,8 @@ class LoginRequiredMiddleware:
 
         url = request.path_info
         tokens = Token.objects.all()
+        condition = url.startswith('/static/') or url.startswith(
+            '/api/') or url == '/api-check/' or url == '/download/' or url == '/users/qrcode/' or url == '/users/check-qrcode/'
 
         try:
             repair = Repair.objects.all()[0]
@@ -25,7 +27,7 @@ class LoginRequiredMiddleware:
             key_tk: str = request.GET.get('tk', '')
             #print("key_tk "+key_tk)
 
-            if url.startswith('/static/') or url.startswith('/api/') or url == '/api-check/' or url == '/download/' or url == '/users/qrcode/' or url == '/users/check-qrcode/' or url.startswith('/ws/'):
+            if condition:
                 return self.get_response(request)
             if not request.user.is_authenticated and request.path_info not in self.open_urls:
                 if url.startswith('/upload/'):
@@ -40,7 +42,7 @@ class LoginRequiredMiddleware:
                     return redirect(self.login_url + '?next=' + request.path)
             return self.get_response(request)
         else:
-            if url.startswith('/admin/') or url.startswith('/static/') or url == '/api-check/' or url == '/download/' or url == '/users/qrcode/' or url == '/users/check-qrcode/' or url.startswith('/ws/'):
+            if condition:
                 return self.get_response(request)
 
             else:

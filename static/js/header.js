@@ -7,9 +7,12 @@ $(function(){
 
     $('#v-search').bind('keypress',function(event){
         var word = $('#v-search').val()
-        if(event.keyCode == "13" && word.length > 0)
+        if(event.keyCode == "13" && word.length > 0) //&& word.length > 0
         {
             window.location = search_url + '?q='+word;
+        }
+        else if(event.keyCode == "13"&& word.length == 0){
+          window.location = '/'
         }
     });
 
@@ -17,6 +20,9 @@ $(function(){
         var word = $('#v-search').val()
         if(word.length > 0){
             window.location = search_url + '?q='+word;
+        }
+        else if(word.length == 0){
+          window.location = '/'
         }
     });
 

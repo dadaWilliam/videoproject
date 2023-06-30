@@ -39,7 +39,8 @@ body {
     height: 100%;
 }
 
-.ui.menu .item img.logo {
+.ui.menu .item 
+img.logo {
     margin-right: 0.66rem;
 }
 
@@ -58,8 +59,9 @@ body {
 }
 
 .v-video-search{ 
-    margin-right: 1em;
-    width: 30%;
+    left: 0em;
+    margin-right: 4em;
+    width: 40%;
 }
 
 .v-video-search i{
@@ -71,9 +73,11 @@ body {
 }
 
 .v-header-extra{  
-    position: relative; 
+    position: sticky; 
     width:100%;
-    text-align: right;    
+    text-align: right;
+    right: 1vw; 
+/*    left: -5vw;     */
     padding-top: 0.60rem;
 }  
  

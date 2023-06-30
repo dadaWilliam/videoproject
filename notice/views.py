@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from users.models import User
 from video.models import Video
 from notifications.models import Notification
 from helpers import get_page_list
+
 
 class NoticeListView(LoginRequiredMixin, ListView):
     """通知列表"""
@@ -32,12 +34,24 @@ class NoticeListView(LoginRequiredMixin, ListView):
 
     # 未读+已读通知的查询集
     def get_queryset(self):
-        return self.request.user.notifications.unread() | self.request.user.notifications.read()
+        user = self.request.user
+        user_vip = User.objects.filter(id=user.id)[0].vip
+        if user_vip:
+            user_notification = user.notifications.unread() | user.notifications.read()
+            # = History.objects.filter(
+            #     user=user, ).order_by('-viewed_on')
+        else:
+            user_notification = user.notifications.filter(
+                notification__vip=user_vip).unread() | user.notifications.filter(notification__vip=user_vip).read()
+        # user_history.values('content_object')
+        # self.request.user.notifications.unread() | self.request.user.notifications.read()
+        return user_notification
 
 
 class NoticeUpdateView(View):
     """更新通知状态"""
     # 处理 get 请求
+
     def get(self, request):
         # 获取未读消息
         notice_id = request.GET.get('notice_id')

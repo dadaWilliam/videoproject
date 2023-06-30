@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import re_path, url
+from users import consumer
 from video import views
 from django.views.static import serve
 
@@ -38,10 +39,12 @@ router.register(r'video-recommend', views.VideoRecommendViewSet,
                 basename='video-recommend')
 router.register(r'video', views.VideoViewSet, basename='video')
 
-router.register(r'classification', views.ClassificationViewSet)
-router.register(r'user', views.UserViewSet)
+router.register(r'classification', views.ClassificationViewSet,
+                basename='classification')
+router.register(r'user', views.UserViewSet, basename='user')
 router.register(r'video-history', views.HistoryViewSet,
                 basename='video-history')
+
 # jwt 验证
 
 urlpatterns = [
@@ -53,6 +56,7 @@ urlpatterns = [
     path('history/', include('history.urls')),
     path('maintenance/', views.maintenance, name='maintenance'),
     path('download/', views.download, name='download'),
+    path('file/', views.file, name='file'),
     path('', views.IndexView.as_view(), name='home'),  # 默认首页
 
     path('docs/', include_docs_urls(title='说明文档')),
@@ -67,12 +71,15 @@ urlpatterns = [
     path('api/video-like/<int:code>', views.api_like, name='api-like'),
     path('api/video-collect/<int:code>', views.api_collect, name='api-collect'),
     path('api/video-view/<int:code>', views.api_video_view, name='api-view'),
-    path('api/collected-video/<int:user_id>',
-         views.VideoCollectedViewSet.as_view()),
-    path('api/liked-video/<int:user_id>', views.VideoLikedViewSet.as_view()),
+    # path('api/collected-video/<int:user_id>',
+    #      views.VideoCollectedViewSet.as_view()),
+    # path('api/liked-video/<int:user_id>', views.VideoLikedViewSet.as_view()),
+    path('api/liked-video/', views.VideoLikedViewSet.as_view()),
+    path('api/collected-video/', views.VideoCollectedViewSet.as_view()),
+
     path('api/update-notice/<int:code>', views.api_notice_update),
     path('api/notice/', views.api_notice),
-    path('api/notification/<int:code>/<int:user_id>',
+    path('api/notification/<int:code>',
          views.NotificationViewSet.as_view()),
     # notice
     path('notice/', include('notice.urls', namespace='notice')),
@@ -91,3 +98,7 @@ urlpatterns = [
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = views.page_not_found
+
+websocket_urlpatterns = [
+    re_path(r'ws/notifications/$', consumer.NotificationConsumer.as_asgi()),
+]

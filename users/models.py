@@ -15,6 +15,7 @@ class User(AbstractUser):
     gender = models.CharField(
         max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     subscribe = models.BooleanField(default=False)
+    vip = models.BooleanField(default=True, blank=False, null=False)
     expire = models.DateTimeField(
         auto_now=False, auto_now_add=False, null=True, blank=True)
 
@@ -55,3 +56,11 @@ class Feedback(models.Model):
 
     class Meta:
         db_table = "v_feedback"
+
+
+class FileClass(models.Model):
+    file = models.FileField()
+    desc = models.CharField(max_length=255, blank=True, null=True)
+    time = models.DateTimeField(
+        auto_now=False, auto_now_add=False, null=True, blank=True)
+    vip = models.BooleanField(default=True, blank=False, null=False)

@@ -1,3 +1,4 @@
+import mimetypes
 import os
 from datetime import timedelta
 
@@ -11,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wg*kgsb5$ok23k3t%g)^2mf6++v(o(j1d%-vfd0k(@f(@jg(qh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -70,7 +71,7 @@ LOGIN_REDIRECT_URL = '/video/index'
 THUMBNAIL_DEBUG = True
 
 # 文件上传路径
-MEDIA_ROOT = os.path.join(BASE_DIR, 'upload').replace('\\','/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'upload').replace('\\', '/')
 MEDIA_URL = '/upload/'
 
 # 上传视频最大尺寸
@@ -107,7 +108,6 @@ WSGI_APPLICATION = 'videoproject.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
 
 
 DATABASES = {
@@ -155,28 +155,27 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 
-
 STATIC_URL = '/static/'
 
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static') #collect_static path, must be static
-#设置图片等静态文件的路径
+# collect_static path, must be static
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# 设置图片等静态文件的路径
 STATICFILES_DIRS = (
-    ('css',os.path.join(STATIC_ROOT,'css').replace('\\','/') ),
-    ('js',os.path.join(STATIC_ROOT,'js').replace('\\','/') ),
-    ('img',os.path.join(STATIC_ROOT,'img').replace('\\','/') ),
+    ('css', os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
+    ('js', os.path.join(STATIC_ROOT, 'js').replace('\\', '/')),
+    ('img', os.path.join(STATIC_ROOT, 'img').replace('\\', '/')),
 )
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 86400
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 STATICFILES_FINDERS = (
-"django.contrib.staticfiles.finders.FileSystemFinder",
-"django.contrib.staticfiles.finders.AppDirectoriesFinder"
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 )
 
-import mimetypes
 mimetypes.add_type('text/css', '.css')
 mimetypes.add_type('application/javascript', '.js')
 
@@ -184,7 +183,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-        #'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 自定义认证类路径
         'video.authentication.CustomAuthentication',
 
@@ -198,7 +197,7 @@ REST_FRAMEWORK = {
         'user': '200/minute',
     },
     'DEFAULT_PERMISSION_CLASSES': (
-        #'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 

@@ -24,11 +24,13 @@ from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.db.models import Q
 
+from videoproject.settings import SITE_URL
+
 from .models import Feedback, QRcode, Token, User
 
 from .forms import ProfileForm, SignUpForm, UserLoginForm, ChangePwdForm, SubscribeForm, FeedbackForm
 
-import qrcode.image.svg
+
 from io import BytesIO
 
 User = get_user_model()
@@ -196,9 +198,15 @@ class CollectListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        user = get_object_or_404(User, pk=self.kwargs.get('pk'))
-        videos = user.collected_videos.all()
+        user = self.request.user
+        if user.vip:
+            videos = user.collected_videos.all()
+        else:
+            videos = user.collected_videos.all().filter(vip=user.vip)
         return videos
+        # # user = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        # videos = user.collected_videos.all()
+        # return videos
 
 
 class LikeListView(generic.ListView):
@@ -216,8 +224,12 @@ class LikeListView(generic.ListView):
         return context
 
     def get_queryset(self):
-        user = get_object_or_404(User, pk=self.kwargs.get('pk'))
-        videos = user.liked_videos.all()
+        # user = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        user = self.request.user
+        if user.vip:
+            videos = user.liked_videos.all()
+        else:
+            videos = user.liked_videos.all().filter(vip=user.vip)
         return videos
 
 
@@ -233,11 +245,11 @@ def get_qr_image_for_user(qr_url: str) -> str:
 @require_http_methods(["POST", "GET"])
 def generate_QRcode(request):
     ip = request.META.get('REMOTE_ADDR', None)
-    code = generate_random_string(64)
+    code = generate_random_string(10)
     QRcode.objects.update_or_create(ip=ip, defaults={'code': code, })
 
     qrcode = get_qr_image_for_user(
-        "xueba//请打开学霸空间APP扫描二维码登录//"+code+"//"+datetime.now().isoformat())
+        "http://" + SITE_URL + "/download?"+"code="+code)
     # factory = qrcode.image.svg.SvgImage
     # # request.POST.get("qr_text", ""),
     # img = qrcode.make("https://123456789",
