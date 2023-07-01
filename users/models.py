@@ -30,8 +30,12 @@ class Token(models.Model):
 
 
 class QRcode(models.Model):
+    user = models.OneToOneField(
+        to=User, on_delete=models.CASCADE, null=True, blank=True)
     ip = models.CharField(max_length=64)
     code = models.CharField(max_length=64)
+    verification = models.CharField(max_length=64, blank=True, null=True)
+    used = models.BooleanField(default=False)
     create_time = models.DateTimeField(auto_now=True, auto_now_add=False)
 
 

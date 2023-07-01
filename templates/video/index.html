@@ -67,13 +67,16 @@
     </style>
    
 
-    <div class="ui orange message " >
+    <div class="ui orange message " style="z-index:-1">
         <i class="close icon"></i>
-        <div class="header" style="text-align: center;">
+        <div class="header" style="text-align: center; ">
             <h>
                 <a class="ui teal label">学霸空间</a>
+                {% if user.vip %}<a class="ui pink label"> VIP 用户</a>{% else %}<a class="ui brown label">普通 用户</a>{% endif %}
+                {% if user.expire %}<a class="ui olive label">{{user.expire|date:'Y-m-d H:i'}} 过期</a>{% else %}<a class="ui blue label">永久有效</a>{% endif %}
                 <a class="ui orange label" onclick="window.location='/download';"> 下载新版APP</a>
                 <!-- <a class="ui grey label" href="#" > 下载 ios APP</a> -->
+                <!-- {% if user.expire %}<a class="ui olive label">{{user.expire|date:'Y-m-d H:i'}} 过期</a>{% else %}<a class="ui olive label">永久有效</a>{% endif %} -->
             </h>
         </div>
         <p style="text-align: center;">欢迎 <span style="color: brown ;">{{user.username}}</span> 来到学霸空间！</p>
@@ -84,7 +87,7 @@
 
         <!-- <p><a class="ui red label">新功能</a> 点赞👍, 收藏😍, 历史记录🤔</p>
         <p><a class="ui blue label">新布局</a> 首页布局已优化</p> -->
-        <!-- <p>🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
+        <!-- <p style="text-align: center;">🚩账户过期时间: {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %} 🐛 </p> -->
         <!-- <p><a class="ui green label"> 2022.7.9</a>APP(android+ios)开发中🐛 </p> -->
         <!-- <div class="ui red progress" id="ios">
             <div class="bar">

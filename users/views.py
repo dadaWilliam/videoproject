@@ -44,6 +44,14 @@ def generate_random_string(length):
     return random_string
 
 
+def generate_random_digits(length):
+    # Define the characters that can be used
+    characters = string.digits
+    # Generate the random string
+    random_string = ''.join(random.choice(characters) for i in range(length))
+    return random_string
+
+
 @ratelimit(key='ip', rate='10/m')
 def login(request):
     was_limited = getattr(request, 'limited', False)
@@ -242,11 +250,12 @@ def get_qr_image_for_user(qr_url: str) -> str:
 
 
 @ajax_required
-@require_http_methods(["POST", "GET"])
+@require_http_methods(["GET", "POST"])
 def generate_QRcode(request):
     ip = request.META.get('REMOTE_ADDR', None)
     code = generate_random_string(10)
-    QRcode.objects.update_or_create(ip=ip, defaults={'code': code, })
+    QRcode.objects.update_or_create(
+        ip=ip, defaults={'code': code, 'verification': None, 'user': None, 'used': False, })
 
     qrcode = get_qr_image_for_user(
         "http://" + SITE_URL + "/download?"+"code="+code)
@@ -268,47 +277,79 @@ def generate_QRcode(request):
     # user = request.user
     # video.switch_collect(user)
     # return render(request, "index.html", context=context)
-    a = '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>'
+    # a = '<svg width="100" height="100"><circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" /></svg>'
     return JsonResponse({"code": 0, "qrcode": qrcode, })
 
 
 # @ajax_required
 @require_http_methods(["GET"])
 def check_QRcode(request,):
-    next = request.POST.get('next', '/')
+    res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
+           'msg': 'OK',   # 错误信息
+           'verification': None,
+           #    'user': None,
+           #    'create_time': datetime.now(),
+           #    'token': None
+           }
+    # next = request.POST.get('next', '/')
     # Authenticate the client here...
     # ip = request.META.get('REMOTE_ADDR', None)
     code = request.GET.get('code', None)
-    token = request.GET.get('token', None)
+    token = request.GET.get('tk', None)
+    # print(code)
+    # print(token)
     qrcode = None
-    user = User.objects.filter(token__token=token)
+    user = User.objects.filter(token__token=token).first()
+    # print(user)
     user_obj = Token.objects.filter(token=token).values("user__expire")
     if user_obj:
-        expire = user_obj[0]
+        expire = user_obj.first()
         expire_time = expire["user__expire"]
         # print(expire_time)
         if expire_time is not None and expire_time - datetime.now() <= timedelta(days=0):  # 用户失效
-            messages.warning(request, "用户失效或扫码出错")
-            return render(request, 'registration/login.html', {'form': form, 'next': next})
+            # messages.warning(request, "用户失效或扫码出错")
+            # return render(request, 'registration/login.html', {'form': form, 'next': next})
+            res['code'] = 1002
+            res['msg'] = 'User expired'
         else:  # 暂未失效
             # QRcode.objects.update_or_create(ip=ip, defaults={'code': code, })
-            qrcode = QRcode.objects.get(code=code)
-    if qrcode is not None and qrcode.create_time - datetime.now() <= timedelta(minutes=300):
-        username = user[0].username
+            qrcode = QRcode.objects.filter(code=code)
+            # print(qrcode)
+        if qrcode:
+            if qrcode.first().create_time - datetime.now() <= timedelta(minutes=5):
+                if qrcode.first().verification or qrcode.first().user or qrcode.first().used:
+                    res['code'] = 1004
+                    res['msg'] = 'qrcode used '
+                else:
+                    verification = generate_random_digits(6)
+                    qrcode.update(user=user, verification=verification)
+                    res['verification'] = verification
+                    # print(verification)
+            else:
+                res['code'] = 1003
+                res['msg'] = 'qrcode expired'
 
-        login(user)
-        print(request)
-        # channel_layer = get_channel_layer()
-        # async_to_sync(channel_layer.group_send)(
-        #     f"client-{client_id}",
-        #     {
-        #         "type": "login",
-        #         "client_id": client_id,
-        #     }
-        # )
-        return JsonResponse({"code": 0, "qrcode": '1', })
+            # username = user[0].username
+            # login()
+            # login(user)
+            # print(request)
+            # channel_layer = get_channel_layer()
+            # async_to_sync(channel_layer.group_send)(
+            #     f"client-{client_id}",
+            #     {
+            #         "type": "login",
+            #         "client_id": client_id,
+            #     }
+            # )
+            return JsonResponse(res)
+        else:
+            res['code'] = 1001
+            res['msg'] = 'qrcode incorrect'
+            return JsonResponse(res)
     else:
-        return JsonResponse({"code": 0, "qrcode": qrcode, })
+        res['code'] = 1005
+        res['msg'] = 'unauthorised'
+        return JsonResponse(res)
 
     # qrcode = get_qr_image_for_user(
     #     "xueba//请打开学霸空间APP扫描二维码登录//"+code+"//"+datetime.now().isoformat())
@@ -334,3 +375,86 @@ def check_QRcode(request,):
 #         }
 #     )
 #     return redirect(next)
+
+@require_http_methods(["GET"])
+@ratelimit(key='ip', rate='10/m')
+def scan_Login(request):
+    print('scan-login')
+    form = UserLoginForm()
+    next = request.GET.get('next', '/')
+    was_limited = getattr(request, 'limited', False)
+    if was_limited:
+        messages.warning(request, "操作太频繁了，请1分钟后再试")
+        return render(request, 'registration/login.html', {'form': form, 'next': next})
+    # if request.method == 'POST':
+
+    # next = request.POST.get('next', '/')
+    verification = request.GET.get('verification', None)
+    # print('verify')
+    # print(verification)
+    if verification:
+        qrcode = QRcode.objects.filter(verification=verification)
+        # print(qrcode)
+        if qrcode:
+            if qrcode.first().create_time - datetime.now() <= timedelta(minutes=5) and qrcode.first().used is False:
+                qrcode.update(used=True)
+                user = qrcode.first().user
+                # print(qrcode.first().user)
+                if user is not None:
+                    if user.expire is not None:
+                        if datetime.now() - user.expire >= timedelta(days=0):
+                            messages.warning(request, "用户已失效，请联系管理员")
+                            # return HttpResponse("用户已失效，请联系管理员")
+                            return render(request, 'registration/login.html', {'form': form, 'next': next, })
+                        else:
+                            auth_login(request, user)
+                            session_key = request.session.session_key  # 单一设备登陆
+                            for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                                data = session.get_decoded()
+                                if data.get('_auth_user_id', None) == str(request.user.id):
+                                    session.delete()
+                            # return redirect('home')
+                            return redirect(next)
+                    else:
+                        auth_login(request, user)
+                        session_key = request.session.session_key  # 单一设备登陆
+                        for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                            data = session.get_decoded()
+                            if data.get('_auth_user_id', None) == str(request.user.id):
+                                session.delete()
+                        # return redirect('home')
+                        return redirect(next)
+                else:
+                    messages.warning(request, " 验证码 未扫描! ")
+                    # return HttpResponse("用户已失效，请联系管理员")
+                    return render(request, 'registration/login.html', {'form': form, 'next': next, })
+            else:
+                messages.warning(request, "二维码已失效，请重试！")
+                return render(request, 'registration/login.html', {'form': form, 'next': next})
+        else:
+            messages.warning(request, " 验证码 输入 错误! ")
+            return render(request, 'registration/login.html', {'form': form, 'next': next})
+
+        # form = UserLoginForm(request=request, data=request.POST)
+
+    #     if form.is_valid():
+    #         username = form.cleaned_data.get('username')
+    #         password = form.cleaned_data.get('password')
+    #         user = authenticate(username=username, password=password)
+    #         # user = authenticate(
+    #         #     request, username=request.POST["username"], password=request.POST["password"])
+
+    #     else:
+    #         print(form.errors)
+    else:
+        # next = request.GET.get('next', '/')
+        # form = UserLoginForm()
+        # if was_limited:
+        #     messages.warning(request, "操作太频繁了，请1分钟后再试")
+        #     return render(request, 'registration/login.html', {'form': form, 'next': next})
+
+        messages.warning(request, "未输入 验证码 ! ")
+        return render(request, 'registration/login.html', {'form': form, 'next': next})
+
+    # print(next)
+    # return render(request, 'registration/login.html', {'form': form, 'next': next})

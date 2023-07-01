@@ -73,7 +73,7 @@ img.logo {
 }
 
 .v-header-extra{  
-    position: sticky; 
+    position: relative; 
     width:100%;
     text-align: right;
     right: 1vw; 

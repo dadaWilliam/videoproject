@@ -47,8 +47,9 @@
 </script>
 <div class="main">
 <h3 class="ui header">学霸空间APP 下载</h3>
-
-<div class="ui info message">
+<!-- {% include "base/form_errors.html" %} -->
+{% include "base/form_messages.html" %}
+<div class="ui orange message">
   
   <div class="header">
     新版本 {{time}} 
@@ -68,7 +69,7 @@
     
     
   </ul>
-<p>请注意：安卓已更新，苹果待上架</p>
+<p>请注意：安卓 可直接下载安装，苹果 需前往 App Store 下载</p>
 </div>
 <div class="ui unstackable items">
     <button class="ui basic teal button" onclick="window.location='/static/学霸空间.apk'">

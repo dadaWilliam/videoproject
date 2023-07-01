@@ -1,6 +1,28 @@
 var times = 0;
 var random = Math.round(Math.random()*10)+4;
 var qrcode 
+var scan_times = 0;
+
+// function sendRequest() {
+//         var inputString = document.getElementById('verification-code').value;
+//         var url = 'http://xueba.ca/?verification=' + encodeURIComponent(inputString);
+
+//         fetch(url)
+//             .then(response => response.text())
+//             .then(data => console.log(data))
+//             .catch((error) => {
+//                 console.error('Error:', error);
+//             });
+//     }
+function check(){
+        if ($("#agreement").is(':checked')){
+            return true;
+        }
+        else{
+            alert("请阅读并同意《管理条例》和《隐私政策》！");
+            return false;
+            }
+        }
 
 $('.verification-delete').click(function(){
         if ($("#agreement").is(':checked')){
@@ -236,67 +258,120 @@ $(function () {
     // 写入csrf
     $.getScript("/static/js/csrftoken.js");
     $(".scan").click(function(){
-      $.ajax({
-            url: '/users/qrcode/',
-            data: {
-                // video_id: video_id,
-                'csrf_token': csrftoken
-            },
-            type: 'POST',
-            dataType: 'json',
-            success: function (data) {
-                var code = data.code
-                qrcode = data.qrcode
-                var elem = document.getElementById("qrcode");
-                elem.src  = qrcode;
-                console.log(qrcode)
+        
+        if(check()){
+        if(scan_times == 0){
+            scan_times = scan_times + 1
+            $.ajax({
+                        url: '/users/qrcode/',
+                        data: {
+                            // video_id: video_id,
+                            'csrf_token': csrftoken
+                        },
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+                            var code = data.code
+                            qrcode = data.qrcode
+                            var elem = document.getElementById("qrcode");
+                            elem.src  = qrcode;
+                            // console.log(qrcode)
 
-                $('.ui.qrcode.modal')
+                            $('.ui.qrcode.modal')
+                            .modal({
+                              closable  : true,
+                              // onDeny    : function(){
+                              //   // document.getElementById("agreement").checked = false;
+                              //   return true;
+                              // },
+                              onApprove : function() {
+                                // document.getElementById("agreement").checked = true;
+                                return true;
+                              },
+                            })
+                            .modal('show');
+
+                              const second = 1000,
+                                    minute = second * 60,
+                                    hour = minute * 60,
+                                    day = hour * 24;
+
+                              const countDown = new Date().getTime()+ 5 * 60000,
+                                  x = setInterval(function() {    
+
+                                    const now = new Date().getTime(),
+                                          distance = countDown - now;
+
+                                      document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute)),
+                                      document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
+
+                                    //do something later when date is reached
+                                    if (distance <= 1) {
+                                      // document.getElementById("headline").innerText = "It's my birthday!";
+                                      // document.getElementById("countdown").style.display = "none";
+                                      // document.getElementById("content").style.display = "block";
+                                      clearInterval(x);
+                                      location.reload();
+                                    }
+                                    //seconds
+                                  }, 0)
+                                // $(".verify qrcode button").click(function(){
+                                //     console('verify')
+                                //     var inputString = document.querySelector('.ui.action.fluid.input input[type="text"]').value;
+                                //     var url = '/scan-login/?verification=' + encodeURIComponent(inputString);
+
+                                //     fetch(url)
+                                // });
+                              
+
+
+                            // if(code == 0){
+                            //     var likes = data.likes
+                            //     var user_liked = data.user_liked
+                            //     $('#like-count').text(likes)
+                            //     if(user_liked == 0){
+                            //         $('#like').removeClass("grey").addClass("red")
+                            //         $('#like-count').removeClass("grey").addClass("red")
+                            //     }else{
+                            //         $('#like').removeClass("red").addClass("grey")
+                            //         $('#like-count').removeClass("red").addClass("grey")
+                            //     }
+                            // }else{
+                            //     var msg = data.msg
+                            //     alert(msg)
+                            // }
+
+                        },
+                        error: function(data){
+                            console.log(data)
+                            alert("扫码失败")
+                        }
+                    });
+
+        }
+        else{
+            scan_times = scan_times + 1
+            $('.ui.qrcode.modal')
                 .modal({
                   closable  : true,
-                  onDeny    : function(){
-                    // document.getElementById("agreement").checked = false;
-                    return true;
-                  },
+                  // onDeny    : function(){
+                  //   // document.getElementById("agreement").checked = false;
+                  //   return true;
+                  // },
                   onApprove : function() {
                     // document.getElementById("agreement").checked = true;
                     return true;
                   },
                 })
-
                 .modal('show');
-
-
-                if(code == 0){
-                    var likes = data.likes
-                    var user_liked = data.user_liked
-                    $('#like-count').text(likes)
-                    if(user_liked == 0){
-                        $('#like').removeClass("grey").addClass("red")
-                        $('#like-count').removeClass("grey").addClass("red")
-                    }else{
-                        $('#like').removeClass("red").addClass("grey")
-                        $('#like-count').removeClass("red").addClass("grey")
-                    }
-                }else{
-                    var msg = data.msg
-                    alert(msg)
-                }
-
-            },
-            error: function(data){
-                console.log(data)
-                alert("扫码失败")
             }
-        });
-    });
-
-
+        }
+        else{
+             // alert("请阅读并同意《管理条例》和《隐私政策》！");
+        }
+});
+    
 })
-
-
-
-
 
 
 //$(document)

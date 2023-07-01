@@ -15,4 +15,5 @@ urlpatterns = [
     path('<int:pk>/like_videos/', views.LikeListView.as_view(), name='like_videos'),
     path('qrcode/', views.generate_QRcode, name='generate_QRcode'),
     path('check-qrcode/', views.check_QRcode, name='check_QRcode'),
+    path('scan-login/', views.scan_Login, name='scan_login'),
 ]

@@ -17,7 +17,7 @@ class LoginRequiredMiddleware:
         url = request.path_info
         tokens = Token.objects.all()
         condition = url.startswith('/static/') or url.startswith(
-            '/api/') or url == '/api-check/' or url == '/download/' or url == '/users/qrcode/' or url == '/users/check-qrcode/'
+            '/api/') or url == '/api-check/' or url == '/download/' or url == '/users/qrcode/' or url == '/users/check-qrcode/' or url == '/users/scan-login/'
 
         try:
             repair = Repair.objects.all()[0]

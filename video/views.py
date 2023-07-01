@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
+from django.contrib import messages
 
 from django_tctip.models import Tip
 from video.serializers import *
@@ -67,7 +68,7 @@ class ClassificationViewSet(viewsets.ModelViewSet):
     #permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
-        user_vip = User.objects.filter(id=self.request.user.id)[0].vip
+        user_vip = User.objects.filter(id=self.request.user.id).first().vip
         # tk = self.request.GET.get("tk", None)
         # if tk is not None:
         #     user_vip = User.objects.filter(
@@ -94,7 +95,7 @@ class VideoViewSet(viewsets.ModelViewSet):
         # if tk is not None:
         #     user_vip = User.objects.filter(
         #         token__token=tk)[0].vip
-        user_vip = User.objects.filter(id=self.request.user.id)[0].vip
+        user_vip = User.objects.filter(id=self.request.user.id).first().vip
         if user_vip:
             videos = Video.objects.filter(
                 status=0).order_by('-create_time')
@@ -117,7 +118,7 @@ class VideoIndexShowViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
         # if tk is not None:
-        user_vip = User.objects.filter(id=self.request.user.id)[0].vip
+        user_vip = User.objects.filter(id=self.request.user.id).first().vip
         # user_vip = User.objects.filter(
         #     token__token=tk)[0].vip
         if user_vip:
@@ -134,7 +135,7 @@ class VideoCollectedViewSet(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        user = User.objects.filter(id=self.request.user.id)[0]
+        user = User.objects.filter(id=self.request.user.id).first()
         # tk = self.request.GET.get("tk", None)
         # if tk is not None:
         # user = User.objects.filter(
@@ -155,7 +156,7 @@ class VideoLikedViewSet(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        user = User.objects.filter(id=self.request.user.id)[0]
+        user = User.objects.filter(id=self.request.user.id).first()
         # tk = self.request.GET.get("tk", None)
         # if tk is not None:
         #     user = User.objects.filter(
@@ -181,7 +182,7 @@ class VideoRecommendViewSet(viewsets.ModelViewSet):
         # if tk is not None:
         #     user_vip = User.objects.filter(
         #         token__token=tk)[0].vip
-        user_vip = User.objects.filter(id=self.request.user.id)[0].vip
+        user_vip = User.objects.filter(id=self.request.user.id).first().vip
 
         if user_vip:
             videos = Video.objects.get_recommend_list()
@@ -205,7 +206,7 @@ class HistoryViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
         # if tk is not None:
-        user = User.objects.filter(id=self.request.user.id)[0]
+        user = User.objects.filter(id=self.request.user.id).first()
         # user = User.objects.filter(
         #     token__token=tk)[0]
         histories = History.objects.filter(
@@ -230,7 +231,7 @@ class NotificationViewSet(generics.ListCreateAPIView):
         #     user = User.objects.filter(
         #         token__token=tk)[0]
         # get_object_or_404(User, pk=self.kwargs.get('user_id'))
-        user = User.objects.filter(id=self.request.user.id)[0]
+        user = User.objects.filter(id=self.request.user.id).first()
         code = self.kwargs.get('code')
         # print(self.kwargs.get('video_id'))
         if code == 0:
@@ -318,7 +319,7 @@ class IndexView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         user_id = self.request.user.id
-        user_vip = User.objects.filter(id=user_id)[0].vip
+        user_vip = User.objects.filter(id=user_id).first().vip
 
         context = super(IndexView, self).get_context_data(**kwargs)
         paginator = context.get('paginator')
@@ -362,7 +363,7 @@ class SearchListView(generic.ListView):
 
     def get_queryset(self):
         user_id = self.request.user.id
-        user_vip = User.objects.filter(id=user_id)[0].vip
+        user_vip = User.objects.filter(id=user_id).first().vip
         self.q = self.request.GET.get("q", "")
         if user_vip:
             return Video.objects.filter(title__contains=self.q).filter(status=0)
@@ -385,7 +386,7 @@ class VideoDetailView(ObjectViewMixin, generic.DetailView):
 
     def get_object(self, queryset=None):
         user_id = self.request.user.id
-        user_vip = User.objects.filter(id=user_id)[0].vip
+        user_vip = User.objects.filter(id=user_id).first().vip
         print('pk')
         print(self.kwargs.get('pk'))
         id = self.kwargs.get('pk')
@@ -405,7 +406,7 @@ class VideoDetailView(ObjectViewMixin, generic.DetailView):
         context = super(VideoDetailView, self).get_context_data(**kwargs)
         form = CommentForm()
         user_id = self.request.user.id
-        user_vip = User.objects.filter(id=user_id)[0].vip
+        user_vip = User.objects.filter(id=user_id).first().vip
         if user_vip:
             recommend_list = Video.objects.get_recommend_list()
         else:
@@ -602,7 +603,7 @@ def api_check(request,):
     #         notice_id = request.POST.get('notice_id')
     # else:
     try:
-        repair = Repair.objects.all()[0]
+        repair = Repair.objects.all().first()
     except:
         repair = None
     if repair is not None and repair.ok is False:
@@ -613,7 +614,7 @@ def api_check(request,):
             return JsonResponse({"code": 403, })
         else:
             try:
-                software = Software.objects.all()[0]
+                software = Software.objects.all().first()
             except:
                 software = None
         if software is not None and software.version > int(version):
@@ -632,8 +633,12 @@ def maintenance(request):
 
 
 def download(request):
+    code = request.GET.get("code", None)
+    if code is not None:
+        messages.warning(request, "注意:  请下载 学霸空间 APP 后 扫描二维码！")
+
     try:
-        software = Software.objects.all()[0]
+        software = Software.objects.all().first()
     except:
         software = None
 

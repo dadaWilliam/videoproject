@@ -99,6 +99,6 @@ urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = views.page_not_found
 
-websocket_urlpatterns = [
-    re_path(r'ws/notifications/$', consumer.NotificationConsumer.as_asgi()),
-]
+# websocket_urlpatterns = [
+#     re_path(r'ws/notifications/$', consumer.NotificationConsumer.as_asgi()),
+# ]
