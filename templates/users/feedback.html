@@ -11,6 +11,8 @@
         </div>
         <div class="twelve wide column">
             <div class="v-settings-content">
+                {% include "base/form_errors.html" %}
+                {% include "base/form_messages.html" %}
                 <form class="ui form" novalidate action="{% url 'users:feedback' %}" enctype="multipart/form-data" method="post" role="form">
                     {% csrf_token %}
                     <div class="sixteen wide  field ">
@@ -26,11 +28,26 @@
                             {{ form.contact }}
                         </div>
                     </div>
+                    
+                    <div class="sixteen wide field ">
+
+                        <!-- <label>上传图片</label> -->
+                        <div class="v-form-field">
+                        <label class="ui large basic blue label" for="id_cover">
+                            <i class="upload icon"></i> 上传图片
+                             {{form.image}}
+                        </label>
+                        <span id="file_is_choose" class="n">文件已选择</span>
+                        </div>
+                        <!-- <div >
+                            {{ form.image }}
+                        </div>
+                        <span id="file_is_choose" class="n">文件已选择</span> -->
+                    </div>
 
                     <button class="ui primary button" type="submit">提交</button>
 
-                    {% include "base/form_errors.html" %}
-                    {% include "base/form_messages.html" %}
+                    
 
                 </form>
             </div>
@@ -43,7 +60,15 @@
 
 {% block javascript %}
 <script type="text/javascript">
-$('.ui .dropdown').dropdown();
+$(function(){
+
+    $('.ui .dropdown').dropdown();
+    $("#id_file").change(function(){
+        $("#file_is_choose").show()
+    });
+
+
+});
 
 </script>
 <script src="{% static 'js/left_nav.js' %}"></script>

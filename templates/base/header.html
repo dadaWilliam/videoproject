@@ -37,8 +37,8 @@
                 <!-- <button id="search" class="search icon" style="cursor:pointer;"></button> -->
             </div>
             {% if user.is_authenticated %}
-            <div class="ui inline dropdown" id="v-header-avatar" >
-                <div class="" style="display:inline-block;font-weight:bold;">
+            <div class="ui dropdown" id="v-header-avatar" >
+                <div class="" style="font-weight:bold;">
                     {% thumbnail user.avatar "200x200" crop="center" as im %}
                     <img class="ui avatar image" src="{{ im.url }}">
                     {% empty %}
@@ -56,9 +56,10 @@
                                     ></circle>
                         </svg>
                     {% endif %}
-                    {{ user.username }}
+                    {{ user.username }}<i class="dropdown icon" style="margin-right:8"></i>
+                    
                 </div>
-                <i class="dropdown icon"></i>
+                
                 <div class="menu" >
                     <div class="item" onclick="window.location='{% url 'notice:list' %}';">
                         <i class="bell icon"></i>
@@ -71,6 +72,7 @@
                             {% endif %}
                         
                     </div>
+
                     <div class="item" onclick="window.location='{% url 'users:profile' user.pk %}';">
                         <i class="user icon"></i>
                         <span>个人资料</span>
@@ -87,6 +89,27 @@
                         <i class="history icon"></i>
                         <span>历史记录</span>
                     </div>
+                    <div class="item" onclick="window.location='/article';">
+                        <i class="file icon"></i>
+                        <span>文章中心</span>
+                    </div>
+                    <div class="item" onclick="window.location='/file';">
+                        <i class="folder open icon"></i>
+                        <span>文件中心</span>
+                    </div>
+                    <div class="item" onclick="window.location='/download';">
+                        <i class="download icon"></i>
+                        <span>应用下载</span>
+                    </div>
+                    <div class="item" onclick="window.location='/users/feedback/';">
+                        <i class="paper plane icon"></i>
+                        <span>反馈</span>
+                    </div>
+                    
+                    <div class="item" onclick="window.location='{% url 'users:logout' %}';">
+                        <i class="sign-out icon"></i>
+                        <span>退出</span>
+                    </div>
                     {% if user.is_superuser %}
                     <div class="item" onclick="window.location='{% url 'myadmin:index'  %}';">
                         <i class="archive icon"></i>
@@ -97,7 +120,7 @@
                         <span>Django </span>
                     </div>
                     <div class="item" onclick="window.location='/api';">
-                        <i class="code icon"></i>
+                        <i class="file code icon"></i>
                         <span>API 接口</span>
                     </div>
                     <div class="item" onclick="window.location='/docs';">
@@ -106,14 +129,7 @@
                     </div>
                     
                     {% endif %}
-                    <div class="item" onclick="window.location='/download';">
-                        <i class="download icon"></i>
-                        <span>下载中心</span>
-                    </div>
-                    <div class="item" onclick="window.location='{% url 'users:logout' %}';">
-                        <i class="sign-out icon"></i>
-                        <span>退出</span>
-                    </div>
+                    
                 </div>
             </div>
             {% else %}

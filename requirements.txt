@@ -10,6 +10,6 @@ coreapi
 django-user-visit
 django-notifications-hq
 django-top-notify
-django-filter
-channels
+
 qrcode
+django-ckeditor

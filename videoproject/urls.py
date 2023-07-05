@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import re_path, url
+from article import views as article_views
 from users import consumer
 from video import views
 from django.views.static import serve
@@ -44,6 +45,8 @@ router.register(r'classification', views.ClassificationViewSet,
 router.register(r'user', views.UserViewSet, basename='user')
 router.register(r'video-history', views.HistoryViewSet,
                 basename='video-history')
+router.register(r'article', views.ArticleViewSet, basename='article')
+router.register(r'file', views.FileViewSet, basename='file')
 
 # jwt 验证
 
@@ -52,11 +55,13 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('myadmin/', include('myadmin.urls')),
     path('video/', include('video.urls')),
+    path('article/', include('article.urls')),
+
     path('comment/', include('comment.urls')),
     path('history/', include('history.urls')),
     path('maintenance/', views.maintenance, name='maintenance'),
     path('download/', views.download, name='download'),
-    path('file/', views.file, name='file'),
+    path('file/', article_views.file, name='file'),
     path('', views.IndexView.as_view(), name='home'),  # 默认首页
 
     path('docs/', include_docs_urls(title='说明文档')),

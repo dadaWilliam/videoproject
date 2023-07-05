@@ -53,18 +53,23 @@ class Software(models.Model):
         auto_now=False, auto_now_add=False, null=True, blank=True)
 
 
+class FeedbackQuerySet(models.query.QuerySet):
+
+    def get_count(self):
+        return self.count()
+
+
 class Feedback(models.Model):
     contact = models.CharField(blank=True, null=True, max_length=20)
     content = models.CharField(blank=True, null=True, max_length=200)
+    image = models.ImageField(upload_to='feedback/', blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    objects = FeedbackQuerySet.as_manager()
 
     class Meta:
         db_table = "v_feedback"
 
+    def admin_image(self):
+        return '<img src="%s"/>' % self.image
 
-class FileClass(models.Model):
-    file = models.FileField()
-    desc = models.CharField(max_length=255, blank=True, null=True)
-    time = models.DateTimeField(
-        auto_now=False, auto_now_add=False, null=True, blank=True)
-    vip = models.BooleanField(default=True, blank=False, null=False)
+    admin_image.allow_tags = True

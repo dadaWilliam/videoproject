@@ -4,6 +4,20 @@ body {
     background-color: #FFFFFF;
 }
 
+.v-header-extra{  
+    position: relative; 
+    width:100%; 
+    position: relative; 
+    width:100%;
+    text-align: right;
+    right: 1vw; 
+
+    padding-top: 0.60rem;
+
+}  
+
+
+
 .color-black{
     color:#000000;
 }
@@ -72,14 +86,14 @@ img.logo {
     height: 5.66em;
 }
 
-.v-header-extra{  
+/*.v-header-extra{  
     position: relative; 
-    width:100%;
+    width:65%;
     text-align: right;
     right: 1vw; 
-/*    left: -5vw;     */
+
     padding-top: 0.60rem;
-}  
+}  */
  
 .v-play-icon{
     position: absolute; 

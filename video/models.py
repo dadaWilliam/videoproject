@@ -20,6 +20,9 @@ class VideoQuerySet(models.query.QuerySet):
     def get_not_published_count(self):
         return self.filter(status=1).count()
 
+    def get_vip_count(self):
+        return self.filter(status=0, vip=True).count()
+
     def get_published_list(self):
         return self.filter(status=0).order_by('-create_time')
 

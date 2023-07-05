@@ -4,6 +4,15 @@ from django.utils.timezone import is_aware, utc
 from django import template
 register = template.Library()
 
+
+@register.filter
+def remove_prefix(value, arg):
+    """Removes an arg from the start of a string"""
+    if value.startswith(arg):
+        return value[len(arg):]
+    return value
+
+
 @register.filter
 def time_since(value, default="刚刚"):
     if not isinstance(value, date):  # datetime is a subclass of date
@@ -24,6 +33,7 @@ def time_since(value, default="刚刚"):
             return "%d%s前" % (period, singular)
     return default
 
+
 @register.simple_tag
 def user_liked_class(video, user):
     liked = video.user_liked(user)
@@ -31,6 +41,7 @@ def user_liked_class(video, user):
         return "red"
     else:
         return "grey"
+
 
 @register.simple_tag
 def user_collected_class(video, user):

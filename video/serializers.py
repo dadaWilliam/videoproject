@@ -1,5 +1,7 @@
 from notifications.models import Notification
 from rest_framework import serializers
+
+from article.models import Article, FileClass
 from .models import Video, Classification
 from users.models import User
 from history.models import History
@@ -126,3 +128,32 @@ class VideoSerializer(serializers.HyperlinkedModelSerializer):
         model = Video
         exclude = ['index_show', 'vip', 'status']
         #fields = '__all__'
+
+
+class FileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FileClass
+        exclude = ['vip', 'status']
+
+
+class ArticleSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='article-detail')
+
+    class Meta:
+        model = Article
+        exclude = ['vip', 'status', 'body']
+        # fields = '__all__'
+
+
+class ArticleDetailSerializer(serializers.HyperlinkedModelSerializer):
+
+    url = serializers.HyperlinkedIdentityField(
+        view_name='article-detail')
+
+    class Meta:
+        model = Article
+        exclude = ['vip', 'status', ]
+        # fields = '__all__'

@@ -67,14 +67,15 @@
     </style>
    
 
-    <div class="ui orange message " style="z-index:-1">
+    <div class="ui orange message " style="z-index:0">
         <i class="close icon"></i>
         <div class="header" style="text-align: center; ">
             <h>
                 <a class="ui teal label">学霸空间</a>
                 {% if user.vip %}<a class="ui pink label"> VIP 用户</a>{% else %}<a class="ui brown label">普通 用户</a>{% endif %}
                 {% if user.expire %}<a class="ui olive label">{{user.expire|date:'Y-m-d H:i'}} 过期</a>{% else %}<a class="ui blue label">永久有效</a>{% endif %}
-                <a class="ui orange label" onclick="window.location='/download';"> 下载新版APP</a>
+                <a class="ui orange label" onclick="window.location='/download';" > 下载新版APP</a>
+                <!-- <a class="ui basic label"onclick="window.location='/download';"> <span style="text-decoration-color: black;">下载新版APP</span></a> -->
                 <!-- <a class="ui grey label" href="#" > 下载 ios APP</a> -->
                 <!-- {% if user.expire %}<a class="ui olive label">{{user.expire|date:'Y-m-d H:i'}} 过期</a>{% else %}<a class="ui olive label">永久有效</a>{% endif %} -->
             </h>

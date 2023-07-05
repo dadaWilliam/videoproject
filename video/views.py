@@ -1,5 +1,5 @@
 from urllib import request
-
+from rest_framework import viewsets, mixins
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import generic
@@ -14,7 +14,7 @@ from helpers import get_page_list, ajax_required
 from .forms import CommentForm
 from .models import Video, Classification
 from history.models import History
-from users.models import FileClass, User, Token, Repair, Software
+from users.models import User, Token, Repair, Software
 
 from video.permissions import IsAdminUserOrReadOnly
 from rest_framework import viewsets, generics
@@ -258,6 +258,45 @@ class NotificationViewSet(generics.ListCreateAPIView):
 # login token
 
 
+class FileViewSet(viewsets.ModelViewSet):
+    serializer_class = FileSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = User.objects.filter(id=self.request.user.id).first()
+        if user:
+            if user.vip:
+                return FileClass.objects.filter(status=0)
+            else:
+                return FileClass.objects.filter(status=0, vip=user.vip)
+        else:
+            return FileClass.objects.none()
+
+
+class ArticleViewSet(mixins.ListModelMixin,
+                     mixins.RetrieveModelMixin,
+                     viewsets.GenericViewSet):
+    serializer_class = ArticleSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = User.objects.filter(id=self.request.user.id).first()
+        if user:
+            if user.vip:
+                return Article.objects.filter(status=0)
+            else:
+                return Article.objects.filter(status=0, vip=user.vip)
+        else:
+            return Article.objects.none()
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ArticleSerializer
+        if self.action == 'retrieve':
+            return ArticleDetailSerializer
+        return super().get_serializer_class()
+
+
 def generate_token(username):
     """根据用户名和时间，进行MD5值"""
     import time
@@ -342,11 +381,14 @@ class IndexView(generic.ListView):
 
         self.c = self.request.GET.get("c", None)
         if self.c:
-            classification = get_object_or_404(Classification, pk=self.c)
+            classification = get_object_or_404(
+                Classification, pk=self.c, status=True)
             if user_vip:
                 return classification.video_set.all().order_by('-create_time').filter(status=0)
             else:
                 return classification.video_set.all().order_by('-create_time').filter(status=0, vip=user_vip)
+        # elif self.c:
+        #     return Video.objects.none()
         else:
             if user_vip:
                 return Video.objects.filter(status=0).order_by('-create_time')
@@ -637,26 +679,12 @@ def download(request):
     if code is not None:
         messages.warning(request, "注意:  请下载 学霸空间 APP 后 扫描二维码！")
 
-    try:
-        software = Software.objects.all().first()
-    except:
-        software = None
-
-    if software is not None:
+    software = Software.objects.all().first()
+    desc = None
+    force = None
+    time = None
+    if software:
         desc = software.desc.split("*")
         force = software.force
         time = software.time
     return render(request, 'download.html', context={'desc': desc, 'force': force, 'time': time})
-
-
-def file(request):
-    try:
-        files = FileClass.objects.all()
-    except:
-        files = None
-
-    if files is not None:
-        desc = files.desc.split("*")
-        force = files.force
-        time = files.time
-    return render(request, 'file.html', context={'desc': desc, 'force': force, 'time': time})

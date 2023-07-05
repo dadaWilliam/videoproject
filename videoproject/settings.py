@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "django_top_notify",
     'django_tctip',
     'django_filters',
+    'qrcode',
+    'ckeditor',
+    'article',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +66,8 @@ ROOT_URLCONF = 'videoproject.urls'
 AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
-OPEN_URLS = ['/users/signup/']
+# OPEN_URLS = ['/users/signup/']
+OPEN_URLS = []
 REPAIR_URL = '/maintenance/'
 
 LOGIN_REDIRECT_URL = '/video/index'

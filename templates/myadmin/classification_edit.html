@@ -12,12 +12,20 @@
     <div class="ui divider"></div>
     <div class="row">
         <div class="v-form-wrap">
+                {% include "base/form_errors.html" %}
+                {% include "base/form_messages.html" %}
 
             <form class="ui form" novalidate method="post" action="{% url 'myadmin:classification_edit' form.instance.pk %}"
                   enctype="multipart/form-data" role="form">
                 {% csrf_token %}
                 <div class="field">
-                    <label>分类名称</label>
+                    <label>分类名称
+                    {% if classification.vip %} 
+                    <a class="ui teal label"> VIP </a>
+                    {% else %}
+                    <a class="ui blue label"> 普通 </a>
+                    {% endif %}
+                    </label>
                     {{ form.title }}
                 </div>
                 <div class="field">
@@ -25,7 +33,13 @@
                     <a class="ui green label"> {{ classification.time }}</a>
                     <a class="ui red label"> 排列顺序：最近修改在前</a>
                 </div>
-                
+                <div class="field">
+                     <div class="ui checkbox">
+                      {{form.vip}}
+                      <label>是否VIP</label>
+                    </div>
+                    
+                </div>
                 <div class="field">
                     <div class="ui checkbox">
                       {{form.status}}
@@ -34,9 +48,6 @@
                 </div>
 
                 <button class="ui primary button" type="submit">保存</button>
-
-                {% include "base/form_errors.html" %}
-                {% include "base/form_messages.html" %}
 
             </form>
 

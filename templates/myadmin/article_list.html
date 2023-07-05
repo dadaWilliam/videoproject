@@ -1,0 +1,68 @@
+{% extends 'myadmin/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="ui grid">
+    <div class="row">
+        <h3 class="ui header six wide column">文章列表</h3>
+        <div class="v-title-extra ten wide column">
+            <div class="ui action input v-admin-search">
+                <input type="text" placeholder="搜索..."  value="{{q}}" id="v-search">
+                <button class="ui small button" id="search">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="row">
+        <div class="responsive-table">
+        <table class="ui unstackable single line striped selectable table">
+            <thead>
+            <tr><th>#id</th><th>文章</th><th>状态</th><th>VIP</th></th><th>时间</th><th>查看量</th><th>操作</th></tr>
+            </thead>
+            <tbody class="article-list">
+
+            {% for item in article_list %}
+            <tr article-id="{{item.id}}">
+                <td> {{item.id}}</td>
+                <td> {{item.title|default:"未命名"}}</td>
+                <td> {{item.get_status_display|default:"未知"}}</td>
+                <td> {% if item.vip %}VIP{% else %}普通{% endif %}</td>
+                <td> {{item.time|date:'Y-m-d H:i'}}</td>
+                <td> {{item.view_count }}</td>
+                <td>
+                    <a class="ui primary button article-edit" href="{% url 'myadmin:article_edit' item.id %}">编辑</a>
+                    <a class="ui button article-delete">删除</a>
+                </td>
+            </tr>
+            {% empty %}
+            <h3>暂无数据</h3>
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="6">
+                    {% include 'myadmin/page_nav.html' %}
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block modal %}
+{% include "myadmin/article_list_modal.html" %}
+{% endblock modal %}
+
+{% block javascript %}
+<script>
+    var search_url = "{% url 'myadmin:article_list' %}"
+    var api_article_delete = "{% url 'myadmin:article_delete' %}"
+</script>
+<script src="{% static 'js/myadmin/article_list.js' %}"></script>
+{% endblock javascript %}

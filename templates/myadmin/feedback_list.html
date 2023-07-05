@@ -1,6 +1,6 @@
 {% extends 'myadmin/base.html' %}
 {% load static %}
-
+{% load thumbnail %}
 {% block content %}
 
 <div class="ui grid">
@@ -15,9 +15,10 @@
     </div>
     <div class="ui divider"></div>
     <div class="row">
+        <div class="responsive-table">
         <table class="ui unstackable single line striped selectable table">
             <thead>
-            <tr><th>内容</th><th>联系方式</th><th>时间</th><th>操作</th></tr>
+            <tr><th>内容</th><th>联系方式</th><th>图片</th><th>时间</th><th>操作</th></tr>
             </thead>
             <tbody class="video-list">
 
@@ -25,8 +26,20 @@
             <tr feedback-id="{{item.id}}">
                 <td> {{item.content}}</td>
                 <td> {{item.contact}}</td>
+                <td> {% if item.image %}
+                    {% thumbnail item.image "600x400" crop="center" as im %}
+                    <img id="myImg" src="{{ im.url }}" class="ui small image" alt="Your Image" onclick="showModal()">
+                    
+                    {% empty %}
+
+                    {% endthumbnail %}
+                    {% else %}
+                    未上传图片
+
+                {% endif %}</td>
                 <td> {{item.timestamp|date:'Y-m-d H:i'}}</td>
                 <td>
+
                     <a class="ui button feedback-delete">删除</a>
                 </td>
             </tr>
@@ -44,6 +57,7 @@
             </tfoot>
         </table>
     </div>
+    </div>
 </div>
 
 
@@ -59,4 +73,15 @@
     var api_feedback_delete = "{% url 'myadmin:feedback_delete' %}"
 </script>
 <script src="{% static 'js/myadmin/feedback_list.js' %}"></script>
+<script type="text/javascript">
+function showModal() {
+  // Get the image and insert it inside the modal
+  var img = document.getElementById('myImg');
+  var modalImg = document.getElementById('img01');
+  modalImg.src = img.src;
+  
+  // Show the modal
+  $('.ui.modal.view').modal('show');
+}
+</script>
 {% endblock javascript %}

@@ -8,16 +8,17 @@
         <h3 class="ui header six wide column">分类列表</h3>
         <div class="v-title-extra ten wide column">
             <div class="ui action input v-admin-search">
-                <input type="text" placeholder="Search..."  value="{{q}}" id="v-search">
+                <input type="text" placeholder="搜索..."  value="{{q}}" id="v-search">
                 <button class="ui small button" id="search">搜索</button>
             </div>
         </div>
     </div>
     <div class="ui divider"></div>
     <div class="row">
+        <div class="responsive-table">
         <table class="ui unstackable single line striped selectable table">
             <thead>
-            <tr><th>#id</th><th>名称</th><th>修改时间</th></th><th>状态</th><th>操作</th></tr>
+            <tr><th>#id</th><th>名称</th><th>修改时间</th></th><th>状态</th><th>VIP</th><th>操作</th></tr>
             </thead>
             <tbody class="video-list">
 
@@ -27,6 +28,7 @@
                 <td> {{item.title}}</td>
                 <td> {{item.time}}</td>
                 <td> {% if item.status %}启用{% else %}未启用{% endif %}</td>
+                <td> {% if item.vip %}VIP{% else %}普通{% endif %}</td>
                 <td>
                     <a class="ui primary button classification-edit" href="{% url 'myadmin:classification_edit' item.id %}">编辑</a>
                     <a class="ui button classification-delete">删除</a>
@@ -45,6 +47,7 @@
             </tr>
             </tfoot>
         </table>
+    </div>
     </div>
 </div>
 

@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% load thumbnail %}
+{% load video_tag %}
 
 {% block content %}
 
@@ -46,43 +47,62 @@
   }
 </script>
 <div class="main">
-<h3 class="ui header">学霸空间APP 下载</h3>
+<h3 class="ui header">学霸空间 文件中心</h3>
 
-<div class="ui info message">
-  
-  <div class="header">
-    新版本 {{time}} 
-    {% if force %}
-    <a class="ui red tag label">强制更新</a>
-    {%else%}
-    <a class="ui teal tag label">非强制更新</a>
-    {%endif%}
-  </div>
-  <ul class="list">
-    {% for item in desc %}
-    <li>{{item}}</li>
+<div class="ui grid">
+    {% for item in files %}
+    <div class="eight wide mobile four wide tablet four wide computer column">
+        <div class="ui card">
+            <div class="content">
+
+                <a class="header" id="file {{item.id}} " style="text-align: center;"  target="_blank" onclick="verify('{{item.file.name}}')"><i class="file alternate icon"></i>{{ item.file.name |remove_prefix:"file/" }}  </a>
+                
+                <div style="text-align: center;">
+                    <!-- <i class="file alternate icon"></i> -->
+                    <!-- {{ item.file }}   -->
+                    {{ item.desc }}
+                </div>
+               <!--  <div class="meta" style="text-align: center;">
+                    <span class="date">发布于{{ item.time |time_since}}</span>
+                </div> -->
+                <div class="description" style="text-align: center;">
+                    
+                    <span class="date">{{ item.time |time_since }}</span>
+                    {{ item.view_count}}次下载
+                </div>
+            </div>
+        </div>
+    </div>
     {% empty %}
-    
+    <div></div>
+    <h3>暂无数据</h3>
     {% endfor %}
-    
-    
-    
-  </ul>
-<p>请注意：安卓已更新，苹果待上架</p>
 </div>
-<div class="ui unstackable items">
-    <button class="ui basic teal button" onclick="window.location='/static/学霸空间.apk'">
-  <i class="android icon"></i>
-  安卓
-</button>
-<button class="ui basic red button">
-  <i class="apple icon"></i>
-  苹果 
-</button>
-    
+
 
 </div>
-</div>
+<!--- 模态框 -->
+                <div class="ui tiny modal ">
+                    <div class="header">
+                        <i class="exclamation triangle icon"></i>注意
+                    </div>
+                    <div class="content">
+                        <!-- <img class= "image" id="qrcode" src=""> -->
+                        <div class="description">
+                            管理员设置了密码， 请输入: （未设置请直接点击验证）
+                        </div>
+                        <br>
+                        <div class="ui action fluid input" style="text-align: center;">
+                          <input type="text" id="file-code" placeholder="请输入 密码">
+                          <button class="ui teal button" id="verifyButton">验证</button>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <div class="ui primary approve button">关闭</div>
+                        <!-- <div class="ui deny button">取消</div> -->
+                    </div>
+                </div>
+
 {% include "base/page_nav.html" %}
 
 
@@ -90,7 +110,55 @@
 
 {% block javascript %}
 <script  type="text/javascript" >
+
 $('.ui .dropdown').dropdown();
+function verify(filename){
+    
+    // setup the click event for the button
+    var button = document.getElementById('verifyButton');
+    button.onclick = function() {
+        var code = encodeURIComponent(document.getElementById('file-code').value);
+        window.open('/upload/'+filename + '/?code=' + code, '_blank');
+        // window.location.href = '/upload/'+filename + '/?code=' + code;
+    }
+
+    $('.ui.modal').modal({
+                  closable  : true,
+                  onDeny    : function(){
+                    // document.getElementById("agreement").checked = false;
+                    return true;
+                  },
+                  onApprove : function() {
+                    // document.getElementById("agreement").checked = true;
+                    return true;
+                  },
+                })
+                .modal('show');
+
+            }
+
+$(function () {
+    // 写入csrf
+    $(".header ").click(function(){
+        // href="{% if user.is_superuser %}{{ item.file.url  }}{% if item.code %}?code={{item.code}}{% endif %}{% else %}{{ item.file.url  }}{% if item.code %}?code= {% endif %}{% endif %}"
+            $('.ui.modal')
+                .modal({
+                  closable  : true,
+                  onDeny    : function(){
+                    // document.getElementById("agreement").checked = false;
+                    return true;
+                  },
+                  onApprove : function() {
+                    // document.getElementById("agreement").checked = true;
+                    return true;
+                  },
+                })
+                .modal('show');
+            })
+        })
+        
+    
+
 </script>
 {% endblock javascript %}
 

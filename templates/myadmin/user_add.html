@@ -11,7 +11,8 @@
     <div class="ui divider"></div>
     <div class="row">
         <div class="v-form-wrap">
-
+            {% include "base/form_errors.html" %}
+            {% include "base/form_messages.html" %}
             <form class="ui form" novalidate method="post" action="{% url 'myadmin:user_add' %}"
                   enctype="multipart/form-data" role="form">
                 {% csrf_token %}
@@ -27,7 +28,12 @@
                     <label>过期时间(默认永久有效)</label>
                     {{form.expire}}
                 </div>
-                
+                <div class="field">
+                     <div class="ui checkbox">
+                      {{form.vip}}
+                      <label>是否VIP</label>
+                    </div>
+                </div>
                 <div class="field">
                     <div class="ui checkbox">
                       {{form.is_staff}}
@@ -37,8 +43,7 @@
 
                 <button class="ui primary button" type="submit">添加</button>
 
-                {% include "base/form_errors.html" %}
-                {% include "base/form_messages.html" %}
+                
 
             </form>
 

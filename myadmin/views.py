@@ -12,17 +12,19 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
+from article.models import Article, FileClass
 
 from comment.models import Comment
 from helpers import get_page_list, AdminUserRequiredMixin, ajax_required, SuperUserRequiredMixin, send_html_email
 from users.models import User, Feedback
 from video.models import Video, Classification
-from .forms import UserLoginForm, VideoPublishForm, VideoEditForm, UserAddForm, UserEditForm, ClassificationAddForm, \
+from .forms import ArticleAddForm, ArticleEditForm, FileAddForm, FileEditForm, UserLoginForm, VideoPublishForm, VideoEditForm, UserAddForm, UserEditForm, ClassificationAddForm, \
     ClassificationEditForm
 from .models import MyChunkedUpload
 from notifications.signals import notify
 
 logger = logging.getLogger('my_logger')
+
 
 def login(request):
     if request.method == 'POST':
@@ -56,17 +58,54 @@ class IndexView(AdminUserRequiredMixin, generic.View):
         video_count = Video.objects.get_count()
         video_has_published_count = Video.objects.get_published_count()
         video_not_published_count = Video.objects.get_not_published_count()
+        video_vip_count = Video.objects.get_vip_count()
+
+        article_count = Article.objects.get_count()
+        article_has_published_count = Article.objects.get_published_count()
+        article_not_published_count = Article.objects.get_not_published_count()
+        article_vip_count = Article.objects.get_vip_count()
+
+        file_count = FileClass.objects.get_count()
+        file_has_published_count = FileClass.objects.get_published_count()
+        file_not_published_count = FileClass.objects.get_not_published_count()
+        file_vip_count = FileClass.objects.get_vip_count()
+
         user_count = User.objects.count()
-        user_today_count = User.objects.exclude(date_joined__lt=datetime.date.today()).count()
+        user_today_count = User.objects.exclude(
+            date_joined__lt=datetime.date.today()).count()
+        user_vip_count = User.objects.filter(vip=True).count(),
         comment_count = Comment.objects.get_count()
         comment_today_count = Comment.objects.get_today_count()
+
+        feedback_count = Feedback.objects.get_count()
+        feedback_today_count = Feedback.objects.exclude(
+            timestamp__lt=datetime.date.today()).count()
+
         data = {"video_count": video_count,
                 "video_has_published_count": video_has_published_count,
                 "video_not_published_count": video_not_published_count,
+                "video_vip_count": video_vip_count,
+
+                "article_count": article_count,
+                "article_has_published_count": article_has_published_count,
+                "article_not_published_count": article_not_published_count,
+                "article_vip_count": article_vip_count,
+
+                "file_count": file_count,
+                "file_has_published_count": file_has_published_count,
+                "file_not_published_count": file_not_published_count,
+                "file_vip_count": file_vip_count,
+
                 "user_count": user_count,
                 "user_today_count": user_today_count,
+                "user_vip_count": user_vip_count[0],
+
                 "comment_count": comment_count,
-                "comment_today_count": comment_today_count}
+                "comment_today_count": comment_today_count,
+
+                "feedback_count": feedback_count,
+                "feedback_today_count": feedback_today_count
+                }
         return render(self.request, 'myadmin/index.html', data)
 
 
@@ -99,7 +138,7 @@ class VideoPublishView(SuperUserRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(VideoPublishView, self).get_context_data(**kwargs)
         clf_list = Classification.objects.all().values()
-        clf_data = {'clf_list':clf_list}
+        clf_data = {'clf_list': clf_list}
         context.update(clf_data)
         return context
 
@@ -119,7 +158,7 @@ class VideoEditView(SuperUserRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super(VideoEditView, self).get_context_data(**kwargs)
         clf_list = Classification.objects.all().values()
-        clf_data = {'clf_list':clf_list}
+        clf_data = {'clf_list': clf_list}
         context.update(clf_data)
         return context
 
@@ -159,6 +198,125 @@ class VideoListView(AdminUserRequiredMixin, generic.ListView):
         self.q = self.request.GET.get("q", "")
         return Video.objects.get_search_list(self.q)
 
+###
+
+
+class ArticleListView(AdminUserRequiredMixin, generic.ListView):
+    model = Article
+    template_name = 'myadmin/article_list.html'
+    context_object_name = 'article_list'
+    paginate_by = 10
+    q = ''
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ArticleListView, self).get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        page_list = get_page_list(paginator, page)
+        context['page_list'] = page_list
+        context['q'] = self.q
+        return context
+
+    def get_queryset(self):
+        self.q = self.request.GET.get("q", "")
+        return Article.objects.filter(title__contains=self.q)
+
+
+class ArticleAddView(SuperUserRequiredMixin, generic.View):
+    def get(self, request):
+        form = ArticleAddForm()
+        return render(self.request, 'myadmin/article_add.html', {'form': form})
+
+    def post(self, request):
+        form = ArticleAddForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+
+            form.save(commit=True)
+            return render(self.request, 'myadmin/article_add_success.html')
+        return render(self.request, 'myadmin/article_add.html', {'form': form})
+    # def get_success_url(self):
+    #     return reverse('myadmin:video_publish_success')
+
+
+@ajax_required
+@require_http_methods(["POST"])
+def article_delete(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"code": 1, "msg": "无删除权限"})
+    article_id = request.POST['article_id']
+    instance = Article.objects.get(id=article_id)
+    instance.delete()
+    return JsonResponse({"code": 0, "msg": "success"})
+
+
+class ArticleEditView(SuperUserRequiredMixin, generic.UpdateView):
+    model = Article
+    form_class = ArticleEditForm
+    template_name = 'myadmin/article_edit.html'
+
+    def get_success_url(self):
+        messages.success(self.request, "保存成功")
+        return reverse('myadmin:article_edit', kwargs={'pk': self.kwargs['pk']})
+
+
+###
+class FileListView(AdminUserRequiredMixin, generic.ListView):
+    model = FileClass
+    template_name = 'myadmin/file_list.html'
+    context_object_name = 'file_list'
+    paginate_by = 10
+    q = ''
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(FileListView, self).get_context_data(**kwargs)
+        paginator = context.get('paginator')
+        page = context.get('page_obj')
+        page_list = get_page_list(paginator, page)
+        context['page_list'] = page_list
+        context['q'] = self.q
+        return context
+
+    def get_queryset(self):
+        self.q = self.request.GET.get("q", "")
+        return FileClass.objects.filter(file__contains=self.q)
+
+
+class FileAddView(SuperUserRequiredMixin, generic.View):
+    def get(self, request):
+        form = FileAddForm()
+
+        return render(self.request, 'myadmin/file_add.html', {'form': form})
+
+    def post(self, request):
+        form = FileAddForm(data=request.POST, files=request.FILES)
+        if form.is_valid():
+
+            form.save(commit=True)
+            return render(self.request, 'myadmin/file_add_success.html')
+        return render(self.request, 'myadmin/file_add.html', {'form': form})
+
+
+@ajax_required
+@require_http_methods(["POST"])
+def file_delete(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"code": 1, "msg": "无删除权限"})
+    file_id = request.POST['file_id']
+    instance = FileClass.objects.get(id=file_id)
+    instance.delete()
+    return JsonResponse({"code": 0, "msg": "success"})
+
+
+class FileEditView(SuperUserRequiredMixin, generic.UpdateView):
+    model = FileClass
+    form_class = FileEditForm
+    template_name = 'myadmin/file_edit.html'
+
+    def get_success_url(self):
+        messages.success(self.request, "保存成功")
+        return reverse('myadmin:file_edit', kwargs={'pk': self.kwargs['pk']})
+ #####
+
 
 class ClassificationListView(AdminUserRequiredMixin, generic.ListView):
     model = Classification
@@ -168,7 +326,8 @@ class ClassificationListView(AdminUserRequiredMixin, generic.ListView):
     q = ''
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ClassificationListView, self).get_context_data(**kwargs)
+        context = super(ClassificationListView,
+                        self).get_context_data(**kwargs)
         paginator = context.get('paginator')
         page = context.get('page_obj')
         page_list = get_page_list(paginator, page)
@@ -187,7 +346,7 @@ class ClassificationAddView(SuperUserRequiredMixin, generic.View):
         return render(self.request, 'myadmin/classification_add.html', {'form': form})
 
     def post(self, request):
-        form = ClassificationAddForm(data=request.POST)
+        form = ClassificationAddForm(data=request.POST, files=request.FILES)
         if form.is_valid():
             form.save(commit=True)
             return render(self.request, 'myadmin/classification_add_success.html')
@@ -311,7 +470,7 @@ class SubscribeView(SuperUserRequiredMixin, generic.View):
 
     def get(self, request):
         video_list = Video.objects.get_published_list()
-        return render(request, "myadmin/subscribe.html" ,{'video_list':video_list})
+        return render(request, "myadmin/subscribe.html", {'video_list': video_list})
 
     def post(self, request):
         if not request.user.is_superuser:
@@ -319,11 +478,13 @@ class SubscribeView(SuperUserRequiredMixin, generic.View):
         video_id = request.POST['video_id']
         video = Video.objects.get(id=video_id)
         subject = video.title
-        context = {'video': video,'site_url':settings.SITE_URL}
+        context = {'video': video, 'site_url': settings.SITE_URL}
         html_message = render_to_string('myadmin/mail_template.html', context)
-        email_list = User.objects.filter(subscribe=True).values_list('email',flat=True)
+        email_list = User.objects.filter(
+            subscribe=True).values_list('email', flat=True)
         # 分组
-        email_list = [email_list[i:i + 2] for i in range(0, len(email_list), 2)]
+        email_list = [email_list[i:i + 2]
+                      for i in range(0, len(email_list), 2)]
 
         if email_list:
             for to_list in email_list:
@@ -368,22 +529,39 @@ def feedback_delete(request):
     instance.delete()
     return JsonResponse({"code": 0, "msg": "success"})
 
+
 @ajax_required
 @require_http_methods(["POST"])
 def advertising(request):
     if not request.user.is_superuser:
         return JsonResponse({"code": 1, "msg": "无权限"})
     video_id = request.POST['video_id']
-    video = get_object_or_404(Video, id=video_id)
-    # 处理 POST 请求
-    notify.send(
-            request.user,
-            recipient=User.objects.all(),
-            verb='通知你观看',
-            target=video,
-            # action_object=new_comment,
-    )
-    return JsonResponse({"code": 0, "msg": "success"})
+    video = Video.objects.filter(id=video_id).first()
+    if video:
+        if video.vip:
+            notify.send(
+                request.user,
+                recipient=User.objects.filter(vip=video.vip),
+                verb='通知你观看',
+                target=video,
+                # action_object=new_comment,
+            )
+        else:
+            notify.send(
+                request.user,
+                recipient=User.objects.filter(),
+                verb='通知你观看',
+                target=video,
+                # action_object=new_comment,
+            )
 
-
-
+        # # 处理 POST 请求
+        # notify.send(
+        #     request.user,
+        #     recipient=User.objects.filter(vip=video.vip),
+        #     verb='通知你观看',
+        #     target=video,
+        #     # action_object=new_comment,
+        # )
+        return JsonResponse({"code": 0, "msg": "success"})
+    return JsonResponse({"code": 2, "msg": "错误"})

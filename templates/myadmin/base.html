@@ -3,44 +3,59 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-
-    
     <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.custom.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/admin.css' %}"/>
-    <title>后台管理</title>
+    <title> 后台管理</title>
+
 </head>
+<script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize the sidebar
+        $('#mobile-menu')
+            .sidebar({
+                context: $('body'),
+                transition: 'overlay'
+            })
+            .sidebar('attach events', '#mobile-menu-button');
+
+        // Show or hide the correct menu depending on screen width
+        function updateMenu() {
+            if ($(window).width() < 768) {
+                $('#desktop-menu').hide();
+                $('#mobile-menu-button').show();
+            } else {
+                $('#desktop-menu').show();
+                $('#mobile-menu-button').hide();
+            }
+        }
+
+        // Update the menu immediately and whenever the window size changes
+        updateMenu();
+        $(window).resize(updateMenu);
+    });
+</script>
+
+<script src="{% static 'js/myadmin/admin_nav.js' %}"></script>
 <body>
-<div class="ui inverted huge borderless fixed fluid  menu">
-    <a class="header item" href="{% url 'myadmin:index' %}">
-        <img src="{% static 'img/logo.png' %}" id="logo">后台管理
-    </a>
-
-    <div class=" right flex menu">
-        <a class="item" href="{% url 'home' %}" target="_blank">前台</a>
-        <a class="item" href="{% url 'myadmin:index' %}">后台</a>
-        <a class="item">{{ request.user.username }}</a>
-        <a class="item" href="{% url 'myadmin:logout' %}">退出</a>
-    </div>
-    
-</div>
-
     <meta content="yes" name="apple-mobile-web-app-capable" />
     <meta content="yes" name="apple-touch-fullscreen" />
     <meta content="telephone=no,email=no" name="format-detection" />
     <meta content="maximum-dpr=2" name="flexible" />
-    <meta name="viewport" content="width=device-width, initial-scale=0.7, maximum-scale=3, minimum-scale=0.5, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=5, minimum-scale=0.4, user-scalable= no">
 
-<div class="ui grid">
-    <div class="row">
-        <div class="column" id="sidebar">
-            <div class="ui secondary vertical fluid  menu">
-                <a class="item" href="{% url 'myadmin:index' %}" id="index">总览</a>
-                <div class="ui divider"></div>
-                <a class="item" href="/admin/django_top_notify/systemtopnotification/"> 顶部通知</a>
-                <a class="item" href="/admin/django_tctip/tip/"> 公告栏</a>
-                <a class="item" href="/admin/notifications/notification/"> 查看推送</a>
+
+<!-- The same menu, but in a sidebar for mobile screens -->
+<div class="ui vertical inverted sidebar menu" id="mobile-menu">
+    
+    <a class="item" href="{% url 'myadmin:index' %}" >管理界面</a>
+    <a class="item" >管理员:{{ request.user.username }}</a>
+    <a class="item" href="{% url 'home' %}" target="_blank" >学霸空间官网</a>
+    <!-- <a class="item" href="{% url 'myadmin:index' %}" id="index">总览</a> -->
                 <div class="ui divider"></div>
                 <a class="item" href="{% url 'myadmin:video_list' %}" id="video_list">视频列表</a>
                 <a class="item" href="{% url 'myadmin:video_add' %}" id="video_add">添加视频</a>
@@ -48,13 +63,86 @@
                 <a class="item" href="{% url 'myadmin:classification_list' %}" id="classification_list">分类列表</a>
                 <a class="item" href="{% url 'myadmin:classification_add' %}" id="classification_add">添加分类</a>
                 <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:file_list' %}" id="video_list">文件列表</a>
+                <a class="item" href="{% url 'myadmin:file_add' %}" id="video_add">添加文件</a>
+                <div class="ui divider"></div>
                 <a class="item" href="{% url 'myadmin:user_list' %}" id="user_list">用户列表</a>
                 <a class="item" href="{% url 'myadmin:user_add' %}" id="user_add">添加用户</a>
                 <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:article_list' %}" id="video_list">文章列表</a>
+                <a class="item" href="{% url 'myadmin:article_add' %}" id="video_add">添加文章</a>
+                <div class="ui divider"></div>
                 <a class="item" href="{% url 'myadmin:comment_list' %}" id="comment_list">评论列表</a>
+                <a class="item" href="{% url 'myadmin:feedback_list'  %}" id="feedback_list">用户反馈</a>
                 <div class="ui divider"></div>
                 <a class="item" href="{% url 'myadmin:subscribe'  %}" id="subscribe">订阅通知</a>
+                
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:logout' %}" >退出登录</a>
+                <div class="ui divider"></div>
+                <a class="item" href="/admin/django_top_notify/systemtopnotification/1/change/">顶部通知</a>
+                <a class="item" href="/admin/django_tctip/tip/1/change/">公告栏</a>
+                <a class="item" href="/admin/notifications/notification/">查看推送</a>
+</div>
+<script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+
+<!-- The rest of your page content -->
+<div class="pusher">
+    <!-- Your content here -->
+    <!-- Your main menu, visible on larger screens -->
+
+<div class="ui inverted stackable menu ">
+
+    <a class="header item" id="mobile-menu-button"> <img src="{% static 'img/logo.png' %}" id="logo">学霸空间 后台管理菜单 </a>
+
+    <a class="header item" href="{% url 'myadmin:index' %}">
+        <img src="{% static 'img/logo.png' %}" id="logo">后台管理
+        <!-- <a id="mobile-menu-button">菜单</a> -->
+    </a>
+    <!-- <a class="item" id="mobile-menu-button">菜单</a> -->
+
+   <!--  <div class="right menu">
+        <a class="item" id="mobile-menu-button" style="text-align: right;">菜单</a>
+    </div> -->
+    <div class="right menu" id="desktop-menu">
+        <a class="item" href="{% url 'home' %}" target="_blank" >学霸空间官网</a>
+        <a class="item" href="{% url 'myadmin:index' %}" >管理界面</a>
+        <a class="item" >管理员:{{ request.user.username }}</a>
+        <a class="item" href="{% url 'myadmin:logout' %}" >退出登录</a>
+    </div>
+</div>
+    <div class="ui grid">
+    <div class="row">
+        <div class="column" id="sidebar">
+            <div class="ui secondary vertical fluid  menu">
+                <a class="item" href="{% url 'myadmin:index' %}" id="index">总览</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:video_list' %}" id="video_list">视频列表</a>
+                <a class="item" href="{% url 'myadmin:video_add' %}" id="video_add">添加视频</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:classification_list' %}" id="classification_list">分类列表</a>
+                <a class="item" href="{% url 'myadmin:classification_add' %}" id="classification_add">添加分类</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:file_list' %}" id="video_list">文件列表</a>
+                <a class="item" href="{% url 'myadmin:file_add' %}" id="video_add">添加文件</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:user_list' %}" id="user_list">用户列表</a>
+                <a class="item" href="{% url 'myadmin:user_add' %}" id="user_add">添加用户</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:article_list' %}" id="video_list">文章列表</a>
+                <a class="item" href="{% url 'myadmin:article_add' %}" id="video_add">添加文章</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:comment_list' %}" id="comment_list">评论列表</a>
                 <a class="item" href="{% url 'myadmin:feedback_list'  %}" id="feedback_list">用户反馈</a>
+                <div class="ui divider"></div>
+                <a class="item" href="{% url 'myadmin:subscribe'  %}" id="subscribe">订阅通知</a>
+                
+                <div class="ui divider"></div>
+                <a class="item" href="/admin/django_top_notify/systemtopnotification/1/change/">顶部通知</a>
+                <a class="item" href="/admin/django_tctip/tip/1/change/">公告栏</a>
+                <a class="item" href="/admin/notifications/notification/">查看推送</a>
             </div>
         </div>
     </div>
@@ -63,16 +151,13 @@
         {% endblock content %}
     </div>
 </div>
-</div>
 
 {% block modal %}
 {% endblock modal %}
-<script src="https://cdn.staticfile.org/jquery/1.9.0/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/semantic-ui/2.4.1/semantic.min.js"></script>
-<script src="{% static 'js/myadmin/admin_nav.js' %}"></script>
+
 {% block javascript %}
 {% endblock javascript %}
-
+</div>
 
 </body>
 </html>

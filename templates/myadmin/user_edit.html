@@ -16,7 +16,21 @@
                   enctype="multipart/form-data" role="form">
                 {% csrf_token %}
                 <div class="field">
-                    <label>用户名</label>
+                    <label>用户名
+                        {% if user.vip %} 
+                    <a class="ui teal label"> VIP </a>
+                    {% else %}
+                    <a class="ui blue label"> 普通 </a>
+                    {% endif %}
+                    
+                    {% if user.is_superuser %} 
+                    <a class="ui green label"> 超级管理员 </a>
+                    {% elif user.is_staff %}
+                    <a class="ui teal label"> 管理员 </a>
+                    {% else %}
+                    <a class="ui blue label"> 非管理员 </a>
+                    {% endif %}
+                </label>
                     {{ form.username }}
                 </div>
                 <div class="field">
@@ -36,6 +50,7 @@
                     <label> </label>
                     {{form.expire}}
                 </div>
+
                 
                 <div class="sixteen wide inline field v-form-field">
 
@@ -73,7 +88,13 @@
                     <label>性别</label>
                         {{form.gender}}
                 </div>
-
+                <div class="field">
+                     <div class="ui checkbox">
+                      {{form.vip}}
+                      <label>是否VIP</label>
+                    </div>
+                    
+                </div>
                 <div class="field">
                     <div class="ui checkbox">
                       {{form.is_staff}}

@@ -1,0 +1,133 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% load video_tag %}
+
+{% block content %}
+
+<div class="loading-div">
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在加载中...</p>
+        </div>
+      </div>
+</div>
+<style>
+.main{
+    display: none;
+}
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
+    overflow: hidden;
+    text-align: center;
+    
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {    
+        $(".loading-div").hide();
+        $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
+       
+    }
+  }
+</script>
+<div class="main">
+<h3 class="ui header">学霸空间 文章中心</h3>
+
+<div class="ui grid">
+    {% for item in articles %}
+    <div class="eight wide mobile four wide tablet four wide computer column">
+        <div class="ui card">
+            <a class="image" href="{% url 'article:detail' item.pk %}">
+                {% thumbnail item.cover "300x200" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}">
+                {% empty %}
+                {% endthumbnail %}
+                <i class="large book icon v-play-icon"></i>
+            </a>
+
+            <div class="content" style="text-align: center;">
+
+                <a class="header" href="{% url 'article:detail' item.pk %}" ><i class="file icon"></i>{{ item.title }} </a>
+                <div style="text-align: center;">
+                    <!-- <i class="file alternate icon"></i> -->
+                    <!-- {{ item.file }}   -->
+                    {{ item.desc }}
+                </div>
+                <div class="meta" style="text-align: center;">
+                    <span class="date">发布于{{ item.time |time_since}}</span>
+                </div>
+                <div class="description" style="text-align: center;">
+                    {{ item.view_count}}次观看
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div></div>
+    <h3>暂无数据</h3>
+    {% endfor %}
+</div>
+
+<!-- <div class="ui info message">
+  
+  <div class="header">
+    新版本 {{time}} 
+    {% if force %}
+    <a class="ui red tag label">强制更新</a>
+    {%else%}
+    <a class="ui teal tag label">非强制更新</a>
+    {%endif%}
+  </div>
+  <ul class="list">
+    {% for item in desc %}
+    <li>{{item}}</li>
+    {% empty %}
+    
+    {% endfor %}
+    
+    
+    
+  </ul>
+<p>请注意：安卓已更新，苹果待上架</p>
+</div> -->
+<!-- <div class="ui unstackable items">
+    <button class="ui basic teal button" onclick="window.location='/static/学霸空间.apk'">
+  <i class="android icon"></i>
+  安卓
+</button>
+<button class="ui basic red button">
+  <i class="apple icon"></i>
+  苹果 
+</button>
+    
+
+</div> -->
+</div>
+{% include "base/page_nav.html" %}
+
+
+{% endblock content %}
+
+{% block javascript %}
+<script  type="text/javascript" >
+$('.ui .dropdown').dropdown();
+</script>
+{% endblock javascript %}
+

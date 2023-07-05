@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load video_tag %}
+{% block css %}
+{% load thumbnail %}
+<link rel="stylesheet" href="{% static 'css/dropload.css' %}">
+{% endblock css %}
+
+{% block content %}
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1766518321149704" crossorigin="anonymous"></script> -->
+<div class="loading-div">
+    <div class="ui icon message">
+        <i class="notched circle loading icon"></i>
+        <div class="content">
+          <div class="header">稍等 </div>
+          <p>正在为您加载视频内容...</p>
+        </div>
+      </div>
+</div>
+<style>
+.main{
+    display: none;
+}
+.loading-div {
+    width: 1800px;
+    height: 720px;
+    background-color: #fff;
+    display: table-cell;
+    vertical-align: middle;
+    color: #555;
+    overflow: hidden;
+    text-align: center;
+    
+  }
+  .loading-div::before {
+    display: inline-block;
+    vertical-align: middle;
+  } 
+</style>
+<script src="https://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<script>
+    document.onreadystatechange = function () {
+    if (document.readyState == "complete") {    
+        $(".loading-div").hide();
+        $('body').css('overflow','scroll');
+        $('.main').fadeIn(); 
+       
+    }
+  }
+</script>
+<div class="main">
+
+<div class="ui grid">
+    <div class=" sixteen wide mobile sixteen wide tablet ten wide computer column  ">
+        <!-- <video class="video" autoplay="autoplay"  controls="controls" controlslist="nodownload" disablePictureInPicture>
+            <source src="{{video.file.url}}" type="video/mp4">
+        </video> -->
+        <a class="image" href="#">
+                {% thumbnail article.cover "600x400" crop="center" as im %}
+                <img class="ui image" src="{{ im.url }}" >
+                {% empty %}
+                {% endthumbnail %}
+                
+            </a>
+        <div class="video-info">
+            <div class="video-title">{{ article.title }}</div>
+            <div class="video-view-count">{{ article.view_count }}次观看</div>
+            <div class="video-view-operation">
+                {{article.desc}}
+            </div>
+        
+                {{article.body | safe }}
+           
+
+            
+        </div>
+       
+    </div>
+   <div class="sixteen wide mobile sixteen wide tablet six wide computer column ">
+        {% include "article/recommend.html" %}
+        {% include "video/ad.html" %}
+    </div>
+</div>
+
+</div>
+{% endblock content %}
+
+{% block javascript %}
+
+<script src="{% static 'js/dropload.js' %}"></script>
+<script src="{% static 'js/detail.js' %}"></script>
+
+<script type="text/javascript">
+    watermark({"watermark_txt":" {{user.username}} "});
+</script>
+
+{% endblock javascript %}
+

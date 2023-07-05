@@ -11,7 +11,8 @@
     <div class="ui divider"></div>
     <div class="row">
         <div class="v-form-wrap">
-
+            {% include "base/form_errors.html" %}
+            {% include "base/form_messages.html" %}
             <form class="ui form" novalidate method="post" action="{% url 'myadmin:video_publish' form.instance.pk %}"
                   enctype="multipart/form-data" role="form">
                 {% csrf_token %}
@@ -37,7 +38,19 @@
                         </div>
                     </div>
                 </div>
-                 {{form.status}}
+                <div class="field">
+                    <label>发布状态</label>
+                    <div class="ui selection  dropdown">
+                        {{form.status}}
+                        <i class="dropdown icon"></i>
+                        <div class="default text">请选择</div>
+                        <div class="menu">
+                            <div class="item" data-value="0">发布</div>
+                            <div class="item" data-value="1">取消发布</div>
+                        </div>
+                    </div>
+                </div>
+                 
                 <div class="field">
                     <label>视频封面</label>
                     {% if video.cover %}
@@ -55,12 +68,19 @@
                         <span id="file_is_choose" class="n">文件已选择</span>
                     </div>
                 </div>
+                 <div class="field">
+                     <div class="ui checkbox">
+                      {{form.vip}}
+                      <label>是否 VIP 内容</label>
+                    </div>
+                    
+                </div>
+
 
 
                 <button class="ui primary button" type="submit">发布</button>
 
-                {% include "base/form_errors.html" %}
-                {% include "base/form_messages.html" %}
+               
 
             </form>
 

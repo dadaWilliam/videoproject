@@ -1,8 +1,9 @@
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
+# from asgiref.sync import async_to_sync
+# from channels.layers import get_channel_layer
 import random
 import string
 import io
+from io import BytesIO
 from qrcode.image.svg import SvgPathFillImage
 from qrcode import make as qr_code_make
 from asyncio import format_helpers
@@ -30,8 +31,6 @@ from .models import Feedback, QRcode, Token, User
 
 from .forms import ProfileForm, SignUpForm, UserLoginForm, ChangePwdForm, SubscribeForm, FeedbackForm
 
-
-from io import BytesIO
 
 User = get_user_model()
 
@@ -178,13 +177,13 @@ class FeedbackView(LoginRequiredMixin, generic.CreateView):
     form_class = FeedbackForm
     template_name = 'users/feedback.html'
 
-    @ratelimit(key='ip', rate='2/m')
-    def post(self, request, *args, **kwargs):
-        was_limited = getattr(request, 'limited', False)
-        if was_limited:
-            messages.warning(self.request, "操作太频繁了，请1分钟后再试")
-            return render(request, 'users/feedback.html', {'form': FeedbackForm()})
-        return super().post(request, *args, **kwargs)
+    # @ratelimit(key='ip', rate='5/m')
+    # def post(self, request, *args, **kwargs):
+    #     was_limited = getattr(request, 'limited', False)
+    #     if was_limited:
+    #         messages.warning(self.request, "操作太频繁了，请1分钟后再试")
+    #         return render(request, 'users/feedback.html', {'form': FeedbackForm()})
+    #     return super().post(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.success(self.request, "提交成功")
@@ -281,7 +280,7 @@ def generate_QRcode(request):
     return JsonResponse({"code": 0, "qrcode": qrcode, })
 
 
-# @ajax_required
+@ajax_required
 @require_http_methods(["GET"])
 def check_QRcode(request,):
     res = {'code': 1000,  # code: 1000 登录成功；1001登录失败
@@ -377,7 +376,7 @@ def check_QRcode(request,):
 #     return redirect(next)
 
 @require_http_methods(["GET"])
-@ratelimit(key='ip', rate='10/m')
+@ratelimit(key='ip', rate='5/m')
 def scan_Login(request):
     print('scan-login')
     form = UserLoginForm()

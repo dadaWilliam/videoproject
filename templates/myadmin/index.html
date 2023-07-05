@@ -12,9 +12,6 @@
 
         <div>
 
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-
             <div class="ui tiny statistics">
                 <div class="statistic">
                     <div class="value">{{ video_count }}</div>
@@ -24,14 +21,59 @@
                     <div class="value">{{ video_has_published_count }}</div>
                     <div class="label">发布中</div>
                 </div>
+               
                 <div class="statistic">
                     <div class="value">{{ video_not_published_count }}</div>
                     <div class="label">未发布</div>
                 </div>
+                 <div class="statistic">
+                    <div class="value">{{ video_vip_count }}</div>
+                    <div class="label">VIP</div>
+                </div>
             </div>
 
             <div class="ui hidden divider"></div>
+            <div class="ui tiny statistics">
+                <div class="statistic">
+                    <div class="value">{{ article_count }}</div>
+                    <div class="label">文章数</div>
+                </div>
+                <div class="statistic">
+                    <div class="value">{{ article_has_published_count }}</div>
+                    <div class="label">发布中</div>
+                </div>
+                
+                <div class="statistic">
+                    <div class="value">{{ article_not_published_count }}</div>
+                    <div class="label">未发布</div>
+                </div>
+                <div class="statistic">
+                    <div class="value">{{ article_vip_count }}</div>
+                    <div class="label">VIP</div>
+                </div>
+            </div>
+
             <div class="ui hidden divider"></div>
+            <div class="ui tiny statistics">
+               <div class="statistic">
+                    <div class="value">{{ file_count }}</div>
+                    <div class="label">文件数</div>
+                </div>
+                <div class="statistic">
+                    <div class="value">{{ file_has_published_count }}</div>
+                    <div class="label">发布中</div>
+                </div>
+                
+                <div class="statistic">
+                    <div class="value">{{ file_not_published_count }}</div>
+                    <div class="label">未发布</div>
+                </div>
+                <div class="statistic">
+                    <div class="value">{{ file_vip_count }}</div>
+                    <div class="label">VIP</div>
+                </div>
+            </div>
+
             <div class="ui hidden divider"></div>
 
             <div class="ui tiny statistics">
@@ -39,15 +81,19 @@
                     <div class="value">{{ user_count }}</div>
                     <div class="label"> 用户数</div>
                 </div>
+
                 <div class="statistic">
                     <div class="value">{{ user_today_count }}</div>
                     <div class="label">今日新增</div>
                 </div>
+                <div class="statistic">
+                    <div class="value">{{ user_vip_count }}</div>
+                    <div class="label">VIP</div>
+                </div>
             </div>
 
             <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
+            
 
             <div class="ui tiny statistics">
                 <div class="statistic">
@@ -59,20 +105,34 @@
                     <div class="label">今日新增</div>
                 </div>
             </div>
+             <div class="ui hidden divider"></div>
+            
+
+            <div class="ui tiny statistics">
+                <div class="statistic">
+                    <div class="value">{{ feedback_count }}</div>
+                    <div class="label">反馈数</div>
+                </div>
+                <div class="statistic">
+                    <div class="value">{{ feedback_today_count }}</div>
+                    <div class="label">今日新增</div>
+                </div>
+            </div>
 
             <div class="ui hidden divider"></div>
             <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
-            <div class="ui hidden divider"></div>
+           
             <h4>
-                {% if not user.is_superuser %}
-                {{user}}权限：查看数据、搜索数据。暂无编辑和删除数据权限。
-                <br/>下载代码后，可自行添加超级用户，即可使用全部功能权限。
-                <br/>添加方法：python3 manage.py createsuperuser
-                <br/>如有问题，可咨询开发者（weixin id: java2048）
-                {% endif %}
+                <br/>  学霸空间 后台管理
+                <br/>
+                {% if user.is_superuser %}
+                {{user}} 权限：所有权限：超级管理员
+                {% else %}
+                {user}} 权限：查看,搜索权限, 无编辑,删除权限：管理员
+
+                {% endif %} 
+                <br/> developed by William & Match 
+                
             </h4>
 
         </div>

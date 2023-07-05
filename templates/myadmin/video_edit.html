@@ -11,14 +11,22 @@
     <div class="ui divider"></div>
     <div class="row">
         <div class="v-form-wrap">
-
+            {% include "base/form_errors.html" %}
+            {% include "base/form_messages.html" %}
             <form class="ui form" novalidate method="post" action="{% url 'myadmin:video_edit' form.instance.pk %}"
                   enctype="multipart/form-data" role="form">
                 {% csrf_token %}
                 <input name="video_id" id="video_id" type="hidden">
                 <div class="field">
-                    <label>视频标题</label>
+                    <label>视频标题
+                    {% if user.vip %} 
+                    <a class="ui teal label"> VIP </a>
+                    {% else %}
+                    <a class="ui blue label"> 普通 </a>
+                    {% endif %}
+                    </label>
                     {{ form.title }}
+
                 </div>
                 <div class="field">
                     <label>视频上传时间</label>
@@ -26,7 +34,7 @@
                 </div>
                 <div class="field">
                     <label>视频路径</label>
-                    {{ video.file }}
+                    {{ video.file |truncatechars:50 }}
                 </div>
                 
                 <div class="field">
@@ -89,12 +97,16 @@
                         <span id="file_is_choose" class="n">文件已选择</span>
                     </div>
                 </div>
-                
+                <div class="field">
+                     <div class="ui checkbox">
+                      {{form.vip}}
+                      <label>是否 VIP 内容</label>
+                    </div>
+                    
+                </div>
                 
                 <button class="ui primary button" type="submit">保存</button>
 
-                {% include "base/form_errors.html" %}
-                {% include "base/form_messages.html" %}
 
             </form>
 

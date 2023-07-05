@@ -2,7 +2,7 @@
 // 写入csrf
 $.getScript("/static/js/csrftoken.js");
 
-$('.advertising').click(function(){
+$(".video-list").on("click", ".advertising", function () {
       var tr = $(this).closest("tr");
       var video_id = $(tr).attr("video-id");
         $('.ui.tiny.modal.advertising')

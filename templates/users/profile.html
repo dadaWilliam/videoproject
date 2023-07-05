@@ -60,13 +60,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="sixteen wide inline field v-form-field">
+                        <label>用户等级:</label>
+                        {% if user.vip %}<a class="ui pink label"> VIP 用户</a>{% else %}<a class="ui brown label">普通 用户</a>{% endif %}
+                        
+                        <!-- <div class="circular ui icon button" data-tooltip="如错误，请联系管理员！" data-position="right center">
+                            <i class="question circle outline icon"></i>
+                          </div> -->
 
                     <div class="sixteen wide inline field v-form-field">
                         <label>过期时间:</label>
                         {% if user.expire %}<a class="ui orange label">{{user.expire|date:'Y-m-d H:i'}}</a>{% else %}<a class="ui teal label">永久有效</a>{% endif %}
-                        <div class="circular ui icon button" data-tooltip="如错误，请联系管理员！" data-position="right center">
+                        <!-- <div class="circular ui icon button" data-tooltip="如错误，请联系管理员！" data-position="right center">
                             <i class="question circle outline icon"></i>
-                          </div>
+                          </div> -->
                     </div>
 
                     <button class="ui primary button" type="submit">保存</button>
@@ -81,10 +88,41 @@
     </div>
 </div>
 
+<div class="ui tiny modal">
+    <div class="header">
+        <i class="exclamation triangle icon"></i>注意
+    </div>
+    <div class="content">
+        <div class="description">
+            如有疑问, 请  <span style="color: red;"> <b>联系管理员</b></span> 修改!
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui primary approve button">确认</div>
+        <!-- <div class="ui deny button">取消</div> -->
+    </div>
+</div>
 {% endblock content %}
 
 {% block javascript %}
 <script type="text/javascript">
+$('.label').click(function(){
+     
+    $('.ui.tiny.modal')
+    .modal({
+      closable  : true,
+      // onDeny    : function(){
+      //   // document.getElementById("agreement").checked = false;
+      //   return true;
+      // },
+      onApprove : function() {
+        // document.getElementById("agreement").checked = true;
+        return true;
+      },
+    })
+    .modal('show');
+});
+
 
 $(function(){
 

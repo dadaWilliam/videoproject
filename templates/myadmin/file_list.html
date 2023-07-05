@@ -1,0 +1,68 @@
+{% extends 'myadmin/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="ui grid">
+    <div class="row">
+        <h3 class="ui header six wide column">文件列表</h3>
+        <div class="v-title-extra ten wide column">
+            <div class="ui action input v-admin-search">
+                <input type="text" placeholder="搜索..."  value="{{q}}" id="v-search">
+                <button class="ui small button" id="search">搜索</button>
+            </div>
+        </div>
+    </div>
+    <div class="ui divider"></div>
+    <div class="row">
+        <div class="responsive-table">
+        <table class="ui unstackable single line striped selectable table">
+            <thead>
+            <tr><th>#id</th><th>文件</th><th>状态</th><th>VIP</th></th><th>时间</th><th>下载量</th><th>操作</th></tr>
+            </thead>
+            <tbody class="video-list">
+
+            {% for item in file_list %}
+            <tr file-id="{{item.id}}">
+                <td> {{item.id}}</td>
+                <td> {{item.file|default:"未命名"}}</td>
+                <td> {{item.get_status_display|default:"未知"}}</td>
+                <td> {% if item.vip %}VIP{% else %}普通{% endif %}</td>
+                <td> {{item.time|date:'Y-m-d H:i'}}</td>
+                <td> {{item.view_count }}</td>
+                <td>
+                    <a class="ui primary button video-edit" href="{% url 'myadmin:file_edit' item.id %}">编辑</a>
+                    <a class="ui button file-delete">删除</a>
+                </td>
+            </tr>
+            {% empty %}
+            <h3>暂无数据</h3>
+            {% endfor %}
+
+            </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="6">
+                    {% include 'myadmin/page_nav.html' %}
+                </th>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block modal %}
+{% include "myadmin/file_list_modal.html" %}
+{% endblock modal %}
+
+{% block javascript %}
+<script>
+    var search_url = "{% url 'myadmin:file_list' %}"
+    var api_file_delete = "{% url 'myadmin:file_delete' %}"
+</script>
+<script src="{% static 'js/myadmin/file_list.js' %}"></script>
+{% endblock javascript %}
