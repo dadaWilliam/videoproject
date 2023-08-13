@@ -89,7 +89,17 @@
                     <div class="content">
                         <!-- <img class= "image" id="qrcode" src=""> -->
                         <div class="description">
+                            {% if user.is_superuser %}
+
+                            超级管理员 无需输入密码，直接点击验证 即可
+
+                            {% else %}
+
                             管理员设置了密码， 请输入: （未设置请直接点击验证）
+
+                            {% endif %} 
+                            
+                            
                         </div>
                         <br>
                         <div class="ui action fluid input" style="text-align: center;">

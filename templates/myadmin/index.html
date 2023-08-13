@@ -126,9 +126,9 @@
                 <br/>  学霸空间 后台管理
                 <br/>
                 {% if user.is_superuser %}
-                {{user}} 权限：所有权限：超级管理员
+                {{user}} 权限--所有权限--超级管理员
                 {% else %}
-                {user}} 权限：查看,搜索权限, 无编辑,删除权限：管理员
+                {{user}} 权限--查看,搜索权限, 无编辑,删除权限--管理员
 
                 {% endif %} 
                 <br/> developed by William & Match 

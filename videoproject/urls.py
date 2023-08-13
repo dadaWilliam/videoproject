@@ -23,6 +23,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls import re_path, url
 from article import views as article_views
+from history.models import History
 from users import consumer
 from video import views
 from django.views.static import serve
@@ -44,7 +45,7 @@ router.register(r'classification', views.ClassificationViewSet,
                 basename='classification')
 router.register(r'user', views.UserViewSet, basename='user')
 router.register(r'video-history', views.HistoryViewSet,
-                basename='video-history')
+                basename='history',)
 router.register(r'article', views.ArticleViewSet, basename='article')
 router.register(r'file', views.FileViewSet, basename='file')
 

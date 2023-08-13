@@ -16,7 +16,7 @@ from .models import Video, Classification
 from history.models import History
 from users.models import User, Token, Repair, Software
 
-from video.permissions import IsAdminUserOrReadOnly
+from video.permissions import IsAdminUserOrReadOnly, IsAuthenticatedAndDeleteOnly
 from rest_framework import viewsets, generics
 from rest_framework import filters
 from rest_framework.views import APIView
@@ -42,8 +42,8 @@ class UserViewSet(viewsets.ModelViewSet):
     """分类视图集"""
     # queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
-    #permission_classes = [IsAdminUserOrReadOnly]
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         # self.kwargs.get
@@ -64,8 +64,8 @@ class ClassificationViewSet(viewsets.ModelViewSet):
     """分类视图集"""
     # queryset = Classification.objects.all()
     serializer_class = ClassificationSerializer
-    permission_classes = (IsAuthenticated,)
-    #permission_classes = [IsAdminUserOrReadOnly]
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         user_vip = User.objects.filter(id=self.request.user.id).first().vip
@@ -87,8 +87,8 @@ class ClassificationViewSet(viewsets.ModelViewSet):
 class VideoViewSet(viewsets.ModelViewSet):
     # queryset = Video.objects.filter(status=0).order_by('-create_time')
     serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticated,)
-    # permission_classes = [IsAdminUserOrReadOnly]
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
@@ -113,7 +113,8 @@ class VideoViewSet(viewsets.ModelViewSet):
 class VideoIndexShowViewSet(viewsets.ModelViewSet):
     # queryset = Video.objects.get_index_show()
     serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
@@ -132,7 +133,8 @@ class VideoIndexShowViewSet(viewsets.ModelViewSet):
 
 class VideoCollectedViewSet(generics.ListCreateAPIView):
     serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         user = User.objects.filter(id=self.request.user.id).first()
@@ -153,7 +155,8 @@ class VideoCollectedViewSet(generics.ListCreateAPIView):
 
 class VideoLikedViewSet(generics.ListCreateAPIView):
     serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         user = User.objects.filter(id=self.request.user.id).first()
@@ -175,7 +178,8 @@ class VideoLikedViewSet(generics.ListCreateAPIView):
 class VideoRecommendViewSet(viewsets.ModelViewSet):
     # queryset = Video.objects.get_recommend_list()
     serializer_class = VideoSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
@@ -197,7 +201,7 @@ class HistoryViewSet(viewsets.ModelViewSet):
 
     # queryset = History.objects.all().order_by('-viewed_on')
     serializer_class = HistorySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedAndDeleteOnly,)
     # permission_classes = [IsAdminUserOrReadOnly]
 
     # filter_backends = [filters.SearchFilter]
@@ -223,7 +227,8 @@ class HistoryViewSet(viewsets.ModelViewSet):
 
 class NotificationViewSet(generics.ListCreateAPIView):
     serializer_class = NotificationSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         # tk = self.request.GET.get("tk", None)
@@ -260,7 +265,8 @@ class NotificationViewSet(generics.ListCreateAPIView):
 
 class FileViewSet(viewsets.ModelViewSet):
     serializer_class = FileSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         user = User.objects.filter(id=self.request.user.id).first()
@@ -277,7 +283,8 @@ class ArticleViewSet(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
                      viewsets.GenericViewSet):
     serializer_class = ArticleSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def get_queryset(self):
         user = User.objects.filter(id=self.request.user.id).first()

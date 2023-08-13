@@ -59,9 +59,10 @@ class ClassificationSerializer(serializers.HyperlinkedModelSerializer):
 #         fields = '__all__'
 
 
-class HistorySerializer(serializers.ModelSerializer):
+class HistorySerializer(serializers.HyperlinkedModelSerializer):
     # """分类的序列化器"""
-    #url = serializers.HyperlinkedIdentityField(view_name='history-detail')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='history-detail')
     video = serializers.SerializerMethodField()
 
     def get_video(self, obj,):
@@ -79,8 +80,8 @@ class HistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = History
-        #exclude = ['content_object',]
-        fields = '__all__'
+        exclude = ['content_type', ]
+        # fields = '__all__'
 
 
 class NotificationSerializer(serializers.ModelSerializer):

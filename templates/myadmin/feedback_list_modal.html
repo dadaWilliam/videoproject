@@ -16,6 +16,13 @@
 <div class="ui modal view" id="imageModal">
   <i class="close icon"></i>
   <div class="content">
-    <img class="ui large image" id="img01">
+    <img src="{{ im.url }}" class="ui image responsive-image" id="img01"/ >
+    <!-- <img class="ui large image" id="img01"> -->
   </div>
 </div>
+<style type="text/css">
+    .responsive-image {
+    max-width: 100%;
+    height: auto;
+}
+</style>

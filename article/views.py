@@ -23,6 +23,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.db.models import Q
+from users.models import Token
 
 from videoproject.settings import SITE_URL
 
@@ -84,11 +85,24 @@ def file(request):
 
 
 def article(request):
+    # if request.user.id:
     user_vip = User.objects.filter(id=request.user.id).first().vip
     if user_vip:
         articles = Article.objects.all().filter(status=0)
     else:
         articles = Article.objects.all().filter(status=0, vip=user_vip)
+    # else:
+    #     key_tk: str = request.GET.get('tk', '')
+    #     articles = Article.objects.none()
+    #     if key_tk:
+    #         user = User.objects.filter(token__token=key_tk).first()
+    #         print(user)
+    #         if user:
+    #             if user.vip:
+    #                 articles = Article.objects.all().filter(status=0)
+    #             else:
+    #                 articles = Article.objects.all().filter(status=0, vip=user.vip)
+
     # file = None
     # desc = None
     # time = None

@@ -1,6 +1,9 @@
+import os
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime, timedelta
+from PIL import Image as PilImage
+from videoproject import settings
 
 
 class User(AbstractUser):
@@ -18,6 +21,34 @@ class User(AbstractUser):
     vip = models.BooleanField(default=True, blank=False, null=False)
     expire = models.DateTimeField(
         auto_now=False, auto_now_add=False, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Save the model so the file is accessible
+
+        img_path = os.path.join(settings.MEDIA_ROOT, self.avatar.name)
+
+        # Check if the file is an image
+        try:
+            img = PilImage.open(img_path)
+        except IOError:
+            # Not an image
+            return
+
+        # If it's an RGBA image, convert it to RGB
+        if img.mode == 'RGBA':
+            # Create a white background
+            background = PilImage.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, (0, 0), img)
+            img = background  # Reset img to the new RGB image
+
+        # If it's an LA image, convert it to L (grayscale without alpha)
+        elif img.mode == 'LA':
+            img = img.convert('L')
+
+        # Save the image back in JPEG format (overwriting the original file)
+        # You can adjust quality as needed
+
+        img.save(img_path, 'JPEG', quality=95)
 
     class Meta:
         db_table = "v_user"
