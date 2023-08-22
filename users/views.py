@@ -171,7 +171,7 @@ class SubscribeView(LoginRequiredMixin, AuthorRequiredMixin, generic.UpdateView)
         return reverse('users:subscribe', kwargs={'pk': self.request.user.pk})
 
 
-class FeedbackView(LoginRequiredMixin, generic.CreateView):
+class FeedbackView(LoginRequiredMixin, generic.CreateView):  # LoginRequiredMixin
 
     model = Feedback
     form_class = FeedbackForm
@@ -184,6 +184,22 @@ class FeedbackView(LoginRequiredMixin, generic.CreateView):
     #         messages.warning(self.request, "操作太频繁了，请1分钟后再试")
     #         return render(request, 'users/feedback.html', {'form': FeedbackForm()})
     #     return super().post(request, *args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+        key_tk: str = request.GET.get('tk', '')
+
+        if key_tk:
+            user = User.objects.filter(token__token=key_tk).first()
+            if user:
+                if user.expire:
+                    if datetime.now() - user.expire >= timedelta(days=0):
+                        messages.warning(request, "用户已失效，请联系管理员")
+                        return render(request, 'registration/login.html', {'form': UserLoginForm()})
+                    else:
+                        auth_login(request, user)
+                else:
+                    auth_login(request, user)
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         messages.success(self.request, "提交成功")
@@ -280,7 +296,7 @@ def generate_QRcode(request):
     return JsonResponse({"code": 0, "qrcode": qrcode, })
 
 
-@ajax_required
+# @ajax_required
 @require_http_methods(["GET"])
 def check_QRcode(request,):
     res = {'code': 1000,  # code: 1000 登录成功；1001登录失败

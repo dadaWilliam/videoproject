@@ -1,16 +1,18 @@
 from urllib import request
 from rest_framework import viewsets, mixins
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 from django.contrib import messages
+from article.models import AD
 
 from django_tctip.models import Tip
 from video.serializers import *
 
 from helpers import get_page_list, ajax_required
+from videoproject import settings
 from .forms import CommentForm
 from .models import Video, Classification
 from history.models import History
@@ -695,3 +697,43 @@ def download(request):
         force = software.force
         time = software.time
     return render(request, 'download.html', context={'desc': desc, 'force': force, 'time': time})
+
+
+@csrf_exempt
+def api_ad(request, code):
+    if code:
+        ad = get_object_or_404(AD, id=code,)
+    else:
+        ad = None
+    if ad:
+        return redirect(ad.url)
+    else:
+        return redirect(settings.login_url + '?next=' + request.path)
+
+    # if not request.user.is_authenticated:
+    #     return JsonResponse({"code": 2002, "msg": "请先登录"})
+    # else:
+
+        # if request.method == "POST":
+        #     # print(request.content_type)
+        #     # Content-type为application/json时 用下面的方法获取数据
+        #     if request.content_type.startswith('application/json'):
+        #         data_json = json.loads(request.body)
+        #         video_id = data_json.get('video_id')
+        #     else:
+        #         video_id = request.POST.get('video_id')
+        #     # print(video_id)
+        # else:
+        #     video_id = request.query_params.get('video_id')
+        # if video_id is None:
+        #     # print(video_id)
+        #     return JsonResponse({"code": 2003, })
+        # else:
+        #     video = Video.objects.get(pk=video_id)
+        #     user = request.user
+        #     if code == 1:
+        #         video.switch_like(user)
+        #         # 用户喜欢
+        #         return JsonResponse({"code": 2001, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
+        #     else:
+        #         return JsonResponse({"code": 2000, "likes": video.count_likers(), "user_liked": video.user_liked(user)})

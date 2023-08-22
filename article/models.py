@@ -92,3 +92,26 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.file:
         if os.path.isfile(instance.file.path):
             os.remove(instance.file.path)
+
+
+class AD(models.Model):
+    # file = models.FileField(upload_to='file/')
+    title = models.CharField(max_length=255, blank=True, null=True)
+    url = models.CharField(max_length=511, blank=True, null=True)
+    time = models.DateTimeField(
+        auto_now=True, auto_now_add=False, null=True, blank=True)
+    # vip = models.BooleanField(default=True, blank=False, null=False)
+    # view_count = models.IntegerField(default=0, blank=True)
+    # code = models.CharField(max_length=64, null=True, blank=True)
+    # objects = FileClassQuerySet.as_manager()
+    # STATUS_CHOICES = (
+
+    #     ('0', '发布中'),
+    #     ('1', '未发布'),
+    # )
+    # status = models.CharField(
+    #     max_length=1, choices=STATUS_CHOICES, blank=True, null=True)
+
+    # def increase_view_count(self):
+    #     self.view_count += 1
+    #     self.save(update_fields=['view_count'])

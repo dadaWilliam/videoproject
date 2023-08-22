@@ -83,6 +83,9 @@ urlpatterns = [
     path('api/liked-video/', views.VideoLikedViewSet.as_view()),
     path('api/collected-video/', views.VideoCollectedViewSet.as_view()),
 
+    path('api/ad/<int:code>', views.api_ad, name='api-ad'),
+
+
     path('api/update-notice/<int:code>', views.api_notice_update),
     path('api/notice/', views.api_notice),
     path('api/notification/<int:code>',

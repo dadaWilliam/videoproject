@@ -23,6 +23,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.sessions.models import Session
 from django.utils import timezone
 from django.db.models import Q
+from users.forms import UserLoginForm
 from users.models import Token
 
 from videoproject.settings import SITE_URL
@@ -69,11 +70,52 @@ class ArticleDetailView(generic.DetailView):
 
 
 def file(request):
-    user_vip = User.objects.filter(id=request.user.id).first().vip
-    if user_vip:
-        files = FileClass.objects.all().filter(status=0)
+    form = UserLoginForm()
+    if request.user.id:
+        user_vip = User.objects.filter(id=request.user.id).first().vip
+        if user_vip:
+            files = FileClass.objects.all().filter(status=0)
+        else:
+            files = FileClass.objects.all().filter(status=0, vip=user_vip)
     else:
-        files = FileClass.objects.all().filter(status=0, vip=user_vip)
+        key_tk: str = request.GET.get('tk', '')
+        files = FileClass.objects.none()
+        if key_tk:
+            user = User.objects.filter(token__token=key_tk).first()
+            # print(user)
+            if user:
+                if user.expire:
+                    if datetime.now() - user.expire >= timedelta(days=0):
+                        messages.warning(request, "用户已失效，请联系管理员")
+                        # return HttpResponse("用户已失效，请联系管理员")
+                        return render(request, 'registration/login.html', {'form': form, 'next': next, })
+                    else:
+                        auth_login(request, user)
+                        # session_key = request.session.session_key  # 单一设备登陆
+                        # for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                        #     data = session.get_decoded()
+                        #     if data.get('_auth_user_id', None) == str(request.user.id):
+                        #         session.delete()
+                        # return redirect('home')
+                        # return redirect(next)
+                else:
+                    auth_login(request, user)
+                    # session_key = request.session.session_key  # 单一设备登陆
+                    # for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                    #     data = session.get_decoded()
+                    #     if data.get('_auth_user_id', None) == str(request.user.id):
+                    #         session.delete()
+                    # return redirect('home')
+                    # return redirect(next)
+                if user.vip:
+                    files = FileClass.objects.all().filter(status=0)
+                else:
+                    files = FileClass.objects.all().filter(status=0, vip=user.vip)
+    # user_vip = User.objects.filter(id=request.user.id).first().vip
+    # if user_vip:
+    #     files = FileClass.objects.all().filter(status=0)
+    # else:
+    #     files = FileClass.objects.all().filter(status=0, vip=user_vip)
     # file = None
     # desc = None
     # time = None
@@ -85,23 +127,47 @@ def file(request):
 
 
 def article(request):
-    # if request.user.id:
-    user_vip = User.objects.filter(id=request.user.id).first().vip
-    if user_vip:
-        articles = Article.objects.all().filter(status=0)
+    form = UserLoginForm()
+    if request.user.id:
+        user_vip = User.objects.filter(id=request.user.id).first().vip
+        if user_vip:
+            articles = Article.objects.all().filter(status=0)
+        else:
+            articles = Article.objects.all().filter(status=0, vip=user_vip)
     else:
-        articles = Article.objects.all().filter(status=0, vip=user_vip)
-    # else:
-    #     key_tk: str = request.GET.get('tk', '')
-    #     articles = Article.objects.none()
-    #     if key_tk:
-    #         user = User.objects.filter(token__token=key_tk).first()
-    #         print(user)
-    #         if user:
-    #             if user.vip:
-    #                 articles = Article.objects.all().filter(status=0)
-    #             else:
-    #                 articles = Article.objects.all().filter(status=0, vip=user.vip)
+        key_tk: str = request.GET.get('tk', '')
+        articles = Article.objects.none()
+        if key_tk:
+            user = User.objects.filter(token__token=key_tk).first()
+            # print(user)
+            if user:
+                if user.expire:
+                    if datetime.now() - user.expire >= timedelta(days=0):
+                        messages.warning(request, "用户已失效，请联系管理员")
+                        # return HttpResponse("用户已失效，请联系管理员")
+                        return render(request, 'registration/login.html', {'form': form, 'next': next, })
+                    else:
+                        auth_login(request, user)
+                        # session_key = request.session.session_key  # 单一设备登陆
+                        # for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                        #     data = session.get_decoded()
+                        #     if data.get('_auth_user_id', None) == str(request.user.id):
+                        #         session.delete()
+                        # return redirect('home')
+                        # return redirect(next)
+                else:
+                    auth_login(request, user)
+                    # session_key = request.session.session_key  # 单一设备登陆
+                    # for session in Session.objects.filter(~Q(session_key=session_key), expire_date__gte=timezone.now()):
+                    #     data = session.get_decoded()
+                    #     if data.get('_auth_user_id', None) == str(request.user.id):
+                    #         session.delete()
+                    # return redirect('home')
+                    # return redirect(next)
+                if user.vip:
+                    articles = Article.objects.all().filter(status=0)
+                else:
+                    articles = Article.objects.all().filter(status=0, vip=user.vip)
 
     # file = None
     # desc = None

@@ -2,6 +2,7 @@ server {
   	charset utf-8;
   	listen 443;
   	server_name xueba.ca;
+	client_max_body_size 100M;
 	
 	ssl on;
         	ssl_certificate /root/cert.crt;

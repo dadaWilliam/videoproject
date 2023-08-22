@@ -1,0 +1,40 @@
+If you're receiving a `413 Request Entity Too Large` error from Nginx when using Django, it usually means that the client is trying to upload a file that exceeds the maximum file size allowed by Nginx.
+
+To fix this:
+
+1. **Increase the maximum request body size in Nginx**:
+
+   Open your Nginx configuration file. This could be located in `/etc/nginx/nginx.conf`, `/etc/nginx/sites-available/default`, or the specific configuration file for your site within the `/etc/nginx/conf.d/` or `/etc/nginx/sites-available/` directory.
+
+   Locate the `server` block, and within that block, add or modify the following line:
+
+   ```
+   client_max_body_size 100M;
+   ```
+
+   The above will set the maximum upload size to 100 Megabytes. You can adjust the `100M` to any other value that suits your needs.
+
+2. **Reload Nginx**:
+
+   After making the change, you'll need to reload Nginx to apply the new settings:
+
+   ```bash
+   sudo systemctl reload nginx
+   ```
+
+3. **Increase the maximum request body size in Django (if using Django's own file upload handlers)**:
+
+   If you're using Django's built-in file upload handlers, you might also need to adjust the `DATA_UPLOAD_MAX_MEMORY_SIZE` setting in your Django `settings.py`:
+
+   ```python
+   # settings.py
+   DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB
+   ```
+
+   This setting determines the maximum size (in bytes) that a request's body may be before a `SuspiciousOperation` exception is raised. Adjust the value according to your needs.
+
+4. **Check Application Middleware**:
+
+   If you have any middleware in your Django application that checks or limits the size of request bodies, ensure that it's also configured to accept larger requests.
+
+By following these steps, you should be able to resolve the `413 Request Entity Too Large` error in your Django application served by Nginx. Remember to adjust the maximum size values appropriately based on your application's requirements.

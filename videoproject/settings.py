@@ -12,7 +12,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'wg*kgsb5$ok23k3t%g)^2mf6++v(o(j1d%-vfd0k(@f(@jg(qh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -67,7 +67,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
 # OPEN_URLS = ['/users/signup/']
-OPEN_URLS = []
+OPEN_URLS = ['/article/', '/file/', '/users/feedback/', '/myadmin/']
 REPAIR_URL = '/maintenance/'
 
 LOGIN_REDIRECT_URL = '/video/index'
@@ -213,3 +213,4 @@ REST_FRAMEWORK = {
 #     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
 #     'REFRESH_TOKEN_LIFETIME': timedelta(days=11),
 # }
+DATA_UPLOAD_MAX_MEMORY_SIZE = 104857600  # 100MB

@@ -13,6 +13,7 @@ from django.views import generic
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView
 from article.models import Article, FileClass
+from datetime import timedelta
 
 from comment.models import Comment
 from helpers import get_page_list, AdminUserRequiredMixin, ajax_required, SuperUserRequiredMixin, send_html_email
@@ -107,6 +108,23 @@ class IndexView(AdminUserRequiredMixin, generic.View):
                 "feedback_today_count": feedback_today_count
                 }
         return render(self.request, 'myadmin/index.html', data)
+
+    def dispatch(self, request, *args, **kwargs):
+        key_tk: str = request.GET.get('tk', '')
+
+        if key_tk:
+            user = User.objects.filter(token__token=key_tk).first()
+            if user:
+                if user.expire:
+                    if datetime.now() - user.expire >= timedelta(days=0):
+                        messages.warning(request, "用户已失效，请联系管理员")
+                        return render(request, 'registration/login.html', {'form': UserLoginForm()})
+                    else:
+                        auth_login(request, user)
+                else:
+                    auth_login(request, user)
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class AddVideoView(SuperUserRequiredMixin, TemplateView):

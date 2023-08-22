@@ -8,9 +8,15 @@ from video.models import Video, Classification
 
 
 def avatar_file_size(value):
-    limit = 2 * 1024 * 1024
+    limit = 5 * 1024 * 1024
     if value.size > limit:
-        raise ValidationError('头像文件太大了，请限制在2M之内')
+        raise ValidationError('头像文件太大了，请限制在5M之内')
+
+
+def file_size(value):
+    limit = 20 * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError('头像文件太大了，请限制在20M之内')
 
 
 class UserLoginForm(AuthenticationForm):
@@ -241,6 +247,7 @@ class FileEditForm(forms.ModelForm):
                            error_messages={
                                'required': '文件不能为空'
                            },
+                           validators=[file_size],
 
                            )
 
