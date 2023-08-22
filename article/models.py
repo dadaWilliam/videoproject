@@ -100,6 +100,9 @@ class AD(models.Model):
     url = models.CharField(max_length=511, blank=True, null=True)
     time = models.DateTimeField(
         auto_now=True, auto_now_add=False, null=True, blank=True)
+
+    def __str__(self):
+        return self.title
     # vip = models.BooleanField(default=True, blank=False, null=False)
     # view_count = models.IntegerField(default=0, blank=True)
     # code = models.CharField(max_length=64, null=True, blank=True)
