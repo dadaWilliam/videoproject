@@ -84,6 +84,7 @@ urlpatterns = [
     path('api/collected-video/', views.VideoCollectedViewSet.as_view()),
 
     path('api/ad/<int:code>', views.api_ad, name='api-ad'),
+    path('api/user-delete/', views.api_user_delete, name='api-user-delete'),
 
 
     path('api/update-notice/<int:code>', views.api_notice_update),

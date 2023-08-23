@@ -737,3 +737,22 @@ def api_ad(request, code):
         #         return JsonResponse({"code": 2001, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
         #     else:
         #         return JsonResponse({"code": 2000, "likes": video.count_likers(), "user_liked": video.user_liked(user)})
+
+
+@api_view(['GET'])
+@csrf_exempt
+def api_user_delete(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"code": 2002, "msg": "请先登录"})
+    else:
+        user = User.objects.filter(id=request.user.id).first()
+        if user:
+            user.expire = datetime.now()
+            user.save()
+            return JsonResponse({"code": 2000, "msg": "ok"})
+        else:
+            return JsonResponse({"code": 2001, "msg": "not ok"})
+
+    #     return redirect(ad.url)
+    # else:
+    #     return redirect(settings.login_url + '?next=' + request.path)

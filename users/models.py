@@ -59,6 +59,9 @@ class Token(models.Model):
     token = models.CharField(max_length=64)
     create_time = models.DateTimeField(auto_now=True, auto_now_add=False)
 
+    def __str__(self):
+        return self.user.username
+
 
 class QRcode(models.Model):
     user = models.OneToOneField(
