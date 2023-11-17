@@ -1,8 +1,8 @@
 # Xueba web ![](https://img.shields.io/badge/python-3.11-orange?style=for-the-badge&logo=python&logoColor=orange) ![](https://img.shields.io/badge/django-4.1.5-green?style=for-the-badge&logo=django&logoColor=green) 
-a Video-On-Demand Website Based on Django
+[Xueba 学霸空间](https://xueba.ca): a Video-On-Demand Website Based on Django
 - **REST API** for [Xueba APP](https://github.com/dadaWilliam/xueba) 
 
-<img src="IMG_3981.jpg" width="400"><img src="IMG_3983.jpg" width="400">
+<img src="IMG_3981.jpg" width="350"><img src="IMG_3983.jpg" width="350">
 ## Project Features
 
 This project is divided into a frontend and a backend.
