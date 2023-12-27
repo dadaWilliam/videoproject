@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'video.middleware.loginrequired.LoginRequiredMiddleware',
     'user_visit.middleware.UserVisitMiddleware',
     'video.middleware.blockinvalidvideo.BlockInvalidVideoMiddleware',
+    'video.middleware.AjaxMiddleware.AjaxMiddleware', #AJAX 
     'django.middleware.locale.LocaleMiddleware',
 ]
 
