@@ -21,12 +21,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.conf.urls import re_path, url
+from django.urls import re_path
 from article import views as article_views
 from history.models import History
 from users import consumer
 from video import views
 from django.views.static import serve
+from django.conf.urls.i18n import i18n_patterns
 
 from rest_framework.routers import DefaultRouter
 from video import views
@@ -51,6 +52,7 @@ router.register(r'file', views.FileViewSet, basename='file')
 
 # jwt 验证
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
@@ -62,11 +64,13 @@ urlpatterns = [
     path('history/', include('history.urls')),
     path('maintenance/', views.maintenance, name='maintenance'),
     path('download/', views.download, name='download'),
+    path('ad/', views.ad, name='ad'),
+
     path('file/', article_views.file, name='file'),
     path('', views.IndexView.as_view(), name='home'),  # 默认首页
 
     path('docs/', include_docs_urls(title='说明文档')),
-    url(r'api/auth/$', views.AuthView.as_view(), name='auth'),  # 登录认证
+    path('api/auth/', views.AuthView.as_view(), name='auth'),  # 登录认证
     #path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     #path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api-auth/', include('rest_framework.urls')),
@@ -103,8 +107,8 @@ urlpatterns = [
             {"document_root": settings.STATIC_ROOT}),
     re_path('^upload/(?P<path>.*)$', serve,
             {"document_root": settings.MEDIA_ROOT}),
-
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = views.page_not_found

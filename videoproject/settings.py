@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'video.middleware.loginrequired.LoginRequiredMiddleware',
     'user_visit.middleware.UserVisitMiddleware',
     'video.middleware.blockinvalidvideo.BlockInvalidVideoMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 SITE_URL = 'xueba.ca'
@@ -67,7 +68,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGIN_URL = '/users/login/'
 # OPEN_URLS = ['/users/signup/']
-OPEN_URLS = ['/article/', '/file/', '/users/feedback/', '/myadmin/']
+OPEN_URLS = ['/article/', '/file/', '/users/feedback/', '/myadmin/', '/ad/']
 REPAIR_URL = '/maintenance/'
 
 LOGIN_REDIRECT_URL = '/video/index'
@@ -149,6 +150,19 @@ LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
+
+# Define the supported languages
+LANGUAGES = [
+    ('zh-hans', 'Simplified Chinese'),
+    ('en-gb', 'English (UK)'),  # UK English
+    ('en-us', 'English (US)'),  # US English
+    ('zh-hant', 'Traditional Chinese'),
+]
+
+# Set path to store translation files
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 USE_L10N = True
 

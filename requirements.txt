@@ -1,15 +1,15 @@
 django_ratelimit
-django_chunked_upload
-Django==3.2.5
+git+https://github.com/dadaWilliam/django-chunked-upload.git
+Django==4.2.8
 sorl-thumbnail
 pillow
 django-filter
-djangorestframework
+djangorestframework==3.14
 djangorestframework-simplejwt
 coreapi
 django-user-visit
 django-notifications-hq
-django-top-notify
+git+https://github.com/dadaWilliam/django-top-notify.git
 
 qrcode
 django-ckeditor

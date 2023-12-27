@@ -699,6 +699,10 @@ def download(request):
     return render(request, 'download.html', context={'desc': desc, 'force': force, 'time': time})
 
 
+def ad(request):
+    return render(request, 'ad.html')
+
+
 @csrf_exempt
 def api_ad(request, code):
     if code:
